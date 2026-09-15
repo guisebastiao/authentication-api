@@ -8,12 +8,12 @@ public class RefreshToken {
     private IdentifierHash identifierHash;
     private ExpiresAt expiresAt;
     private RevokedAt revokedAt;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private CreatedAt createdAt;
+    private UpdatedAt updatedAt;
 
     public RefreshToken() {}
 
-    public RefreshToken(Id id, Session session, IdentifierHash identifierHash, ExpiresAt expiresAt, RevokedAt revokedAt, Timestamp createdAt, Timestamp updatedAt) {
+    public RefreshToken(Id id, Session session, IdentifierHash identifierHash, ExpiresAt expiresAt, RevokedAt revokedAt, CreatedAt createdAt, UpdatedAt updatedAt) {
         this.id = id;
         this.session = session;
         this.identifierHash = identifierHash;
@@ -63,19 +63,19 @@ public class RefreshToken {
         this.revokedAt = revokedAt;
     }
 
-    public Timestamp getCreatedAt() {
+    public CreatedAt getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(CreatedAt createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public UpdatedAt getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(UpdatedAt updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

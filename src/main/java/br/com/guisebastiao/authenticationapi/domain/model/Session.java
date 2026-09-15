@@ -7,12 +7,12 @@ public class Session {
     private AccountDevice accountDevice;
     private IdentifierHash identifierHash;
     private RevokedAt revokedAt;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private CreatedAt createdAt;
+    private UpdatedAt updatedAt;
 
     public Session() {}
 
-    public Session(Id id, AccountDevice accountDevice, IdentifierHash identifierHash, RevokedAt revokedAt, Timestamp createdAt, Timestamp updatedAt) {
+    public Session(Id id, AccountDevice accountDevice, IdentifierHash identifierHash, RevokedAt revokedAt, CreatedAt createdAt, UpdatedAt updatedAt) {
         this.id = id;
         this.accountDevice = accountDevice;
         this.identifierHash = identifierHash;
@@ -53,19 +53,19 @@ public class Session {
         this.revokedAt = revokedAt;
     }
 
-    public Timestamp getCreatedAt() {
+    public CreatedAt getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(CreatedAt createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public UpdatedAt getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(UpdatedAt updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

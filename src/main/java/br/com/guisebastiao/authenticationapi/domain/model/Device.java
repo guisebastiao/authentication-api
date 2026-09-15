@@ -10,12 +10,12 @@ public class Device {
     private DeviceType type;
     private OS os;
     private UserAgent userAgent;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private CreatedAt createdAt;
+    private UpdatedAt updatedAt;
 
     public Device() {}
 
-    public Device(Id id, IdentifierHash identifierHash, DeviceName name, DeviceType type, OS os, UserAgent userAgent, Timestamp createdAt, Timestamp updatedAt) {
+    public Device(Id id, IdentifierHash identifierHash, DeviceName name, DeviceType type, OS os, UserAgent userAgent, CreatedAt createdAt, UpdatedAt updatedAt) {
         this.id = id;
         this.identifierHash = identifierHash;
         this.name = name;
@@ -74,19 +74,19 @@ public class Device {
         this.userAgent = userAgent;
     }
 
-    public Timestamp getCreatedAt() {
+    public CreatedAt getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(CreatedAt createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public UpdatedAt getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(UpdatedAt updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

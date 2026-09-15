@@ -9,12 +9,12 @@ public class AccountActivation {
     private OptHash otpHash;
     private ExpiresAt expiresAt;
     private ResendAvailableAt resendAvailableAt;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private CreatedAt createdAt;
+    private UpdatedAt updatedAt;
 
     public AccountActivation() {}
 
-    public AccountActivation(Id id, Account account, TokenHash tokenHash, OptHash otpHash, ExpiresAt expiresAt, ResendAvailableAt resendAvailableAt, Timestamp createdAt, Timestamp updatedAt) {
+    public AccountActivation(Id id, Account account, TokenHash tokenHash, OptHash otpHash, ExpiresAt expiresAt, ResendAvailableAt resendAvailableAt, CreatedAt createdAt, UpdatedAt updatedAt) {
         this.id = id;
         this.account = account;
         this.tokenHash = tokenHash;
@@ -73,19 +73,19 @@ public class AccountActivation {
         this.resendAvailableAt = resendAvailableAt;
     }
 
-    public Timestamp getCreatedAt() {
+    public CreatedAt getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(CreatedAt createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public UpdatedAt getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(UpdatedAt updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

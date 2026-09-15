@@ -6,12 +6,12 @@ public class Role {
     private Id id;
     private RoleName name;
     private Description description;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private CreatedAt createdAt;
+    private UpdatedAt updatedAt;
 
     public Role() {}
 
-    public Role(Id id, RoleName name, Description description, Timestamp createdAt, Timestamp updatedAt) {
+    public Role(Id id, RoleName name, Description description, CreatedAt createdAt, UpdatedAt updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -43,19 +43,19 @@ public class Role {
         this.description = description;
     }
 
-    public Timestamp getCreatedAt() {
+    public CreatedAt getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(CreatedAt createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public UpdatedAt getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(UpdatedAt updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

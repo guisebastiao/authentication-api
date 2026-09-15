@@ -9,12 +9,12 @@ public class RecoverPassword {
     private ExpiresAt expiresAt;
     private UsedAt usedAt;
     private ResendAvailableAt resendAvailableAt;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private CreatedAt createdAt;
+    private UpdatedAt updatedAt;
 
     public RecoverPassword() {}
 
-    public RecoverPassword(Id id, Account account, TokenHash tokenHash, ExpiresAt expiresAt, UsedAt usedAt, ResendAvailableAt resendAvailableAt, Timestamp createdAt, Timestamp updatedAt) {
+    public RecoverPassword(Id id, Account account, TokenHash tokenHash, ExpiresAt expiresAt, UsedAt usedAt, ResendAvailableAt resendAvailableAt, CreatedAt createdAt, UpdatedAt updatedAt) {
         this.id = id;
         this.account = account;
         this.tokenHash = tokenHash;
@@ -73,19 +73,19 @@ public class RecoverPassword {
         this.resendAvailableAt = resendAvailableAt;
     }
 
-    public Timestamp getCreatedAt() {
+    public CreatedAt getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(CreatedAt createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public UpdatedAt getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(UpdatedAt updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

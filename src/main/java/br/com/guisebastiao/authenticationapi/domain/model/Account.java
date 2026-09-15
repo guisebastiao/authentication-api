@@ -12,12 +12,12 @@ public class Account {
     private PasswordHash passwordHash;
     private AccountStatus status;
     private DisabledAt disabledAt;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private CreatedAt createdAt;
+    private UpdatedAt updatedAt;
 
     public Account() {}
 
-    public Account(Id id, Set<AccountRole> roles, Email email, PasswordHash passwordHash, AccountStatus status, DisabledAt disabledAt, Timestamp createdAt, Timestamp updatedAt) {
+    public Account(Id id, Set<AccountRole> roles, Email email, PasswordHash passwordHash, AccountStatus status, DisabledAt disabledAt, CreatedAt createdAt, UpdatedAt updatedAt) {
         this.id = id;
         this.roles = roles;
         this.email = email;
@@ -76,19 +76,19 @@ public class Account {
         this.disabledAt = disabledAt;
     }
 
-    public Timestamp getCreatedAt() {
+    public CreatedAt getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(CreatedAt createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public UpdatedAt getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(UpdatedAt updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
