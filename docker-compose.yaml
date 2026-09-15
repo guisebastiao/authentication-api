@@ -1,0 +1,71 @@
+name: authentication-api
+
+services:
+  postgres:
+    image: 'postgres:18.4'
+    container_name: authentication-postgres
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      TZ: UTC
+      PGTZ: UTC
+    ports:
+      - '5442:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    networks:
+      - authentication-network
+
+  rabbitmq:
+    image: 'rabbitmq:4.3.4-management'
+    container_name: authentication-rabbitmq
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${MQ_PASS}
+    ports:
+      - '5678:5672'
+      - "15678:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - authentication-network
+
+  mailpit:
+    image: axllent/mailpit:v1.30
+    container_name: authentication-mailpit
+    restart: unless-stopped
+    ports:
+      - "1030:1025"
+      - "8030:8025"
+    volumes:
+      - mailpit-data:/data
+    networks:
+      - authentication-network
+
+  redis:
+    image: 'redis:8.2.1-alpine'
+    container_name: authentication-redis
+    restart: unless-stopped
+    ports:
+      - '6189:6379'
+    volumes:
+      - redis-data:/data
+    networks:
+      - authentication-network
+
+networks:
+  authentication-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
+  mailpit-data:
+  redis-data:
