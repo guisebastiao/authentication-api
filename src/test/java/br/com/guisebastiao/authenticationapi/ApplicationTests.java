@@ -1,4 +1,4 @@
-package br.com.guisebastiao;
+package br.com.guisebastiao.authenticationapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

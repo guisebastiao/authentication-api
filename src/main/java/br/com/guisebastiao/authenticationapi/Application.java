@@ -1,4 +1,4 @@
-package br.com.guisebastiao;
+package br.com.guisebastiao.authenticationapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
