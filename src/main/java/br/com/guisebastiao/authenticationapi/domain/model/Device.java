@@ -1,6 +1,7 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
 import br.com.guisebastiao.authenticationapi.domain.enums.DeviceType;
+import br.com.guisebastiao.authenticationapi.domain.enums.OperatingSystem;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -10,7 +11,7 @@ public class Device {
     private String identifierHash;
     private String name;
     private DeviceType type;
-    private String os;
+    private OperatingSystem os;
     private String userAgent;
     private Instant createdAt;
     private String updatedAt;
@@ -22,7 +23,7 @@ public class Device {
             String identifierHash,
             String name,
             DeviceType type,
-            String os,
+            OperatingSystem os,
             String userAgent,
             Instant createdAt,
             String updatedAt
@@ -69,11 +70,11 @@ public class Device {
         this.type = type;
     }
 
-    public String getOs() {
+    public OperatingSystem getOs() {
         return os;
     }
 
-    public void setOs(String os) {
+    public void setOs(OperatingSystem os) {
         this.os = os;
     }
 
