@@ -1,17 +1,24 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
-import br.com.guisebastiao.authenticationapi.domain.valueobject.*;
+import java.time.Instant;
+import java.util.UUID;
 
 public class Role {
-    private Id id;
-    private RoleName name;
-    private Description description;
-    private CreatedAt createdAt;
-    private UpdatedAt updatedAt;
+    private UUID id;
+    private String name;
+    private String description;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public Role() {}
 
-    public Role(Id id, RoleName name, Description description, CreatedAt createdAt, UpdatedAt updatedAt) {
+    public Role(
+            UUID id,
+            String name,
+            String description,
+            Instant createdAt,
+            Instant updatedAt
+    ) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -19,43 +26,43 @@ public class Role {
         this.updatedAt = updatedAt;
     }
 
-    public Id getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Id id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public RoleName getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(RoleName name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public Description getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Description description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public CreatedAt getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(CreatedAt createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public UpdatedAt getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(UpdatedAt updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

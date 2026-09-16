@@ -1,19 +1,28 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
-import br.com.guisebastiao.authenticationapi.domain.valueobject.*;
+import java.time.Instant;
+import java.util.UUID;
 
 public class RefreshToken {
-    private Id id;
+    private UUID id;
     private Session session;
-    private IdentifierHash identifierHash;
-    private ExpiresAt expiresAt;
-    private RevokedAt revokedAt;
-    private CreatedAt createdAt;
-    private UpdatedAt updatedAt;
+    private String identifierHash;
+    private Instant expiresAt;
+    private Instant revokedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public RefreshToken() {}
 
-    public RefreshToken(Id id, Session session, IdentifierHash identifierHash, ExpiresAt expiresAt, RevokedAt revokedAt, CreatedAt createdAt, UpdatedAt updatedAt) {
+    public RefreshToken(
+            UUID id,
+            Session session,
+            String identifierHash,
+            Instant expiresAt,
+            Instant revokedAt,
+            Instant createdAt,
+            Instant updatedAt
+    ) {
         this.id = id;
         this.session = session;
         this.identifierHash = identifierHash;
@@ -23,11 +32,11 @@ public class RefreshToken {
         this.updatedAt = updatedAt;
     }
 
-    public Id getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Id id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -39,43 +48,43 @@ public class RefreshToken {
         this.session = session;
     }
 
-    public IdentifierHash getIdentifierHash() {
+    public String getIdentifierHash() {
         return identifierHash;
     }
 
-    public void setIdentifierHash(IdentifierHash identifierHash) {
+    public void setIdentifierHash(String identifierHash) {
         this.identifierHash = identifierHash;
     }
 
-    public ExpiresAt getExpiresAt() {
+    public Instant getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(ExpiresAt expiresAt) {
+    public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
     }
 
-    public RevokedAt getRevokedAt() {
+    public Instant getRevokedAt() {
         return revokedAt;
     }
 
-    public void setRevokedAt(RevokedAt revokedAt) {
+    public void setRevokedAt(Instant revokedAt) {
         this.revokedAt = revokedAt;
     }
 
-    public CreatedAt getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(CreatedAt createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public UpdatedAt getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(UpdatedAt updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

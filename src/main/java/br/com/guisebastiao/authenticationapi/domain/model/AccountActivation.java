@@ -1,20 +1,30 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
-import br.com.guisebastiao.authenticationapi.domain.valueobject.*;
+import java.time.Instant;
+import java.util.UUID;
 
 public class AccountActivation {
-    private Id id;
+    private UUID id;
     private Account account;
-    private TokenHash tokenHash;
-    private OptHash otpHash;
-    private ExpiresAt expiresAt;
-    private ResendAvailableAt resendAvailableAt;
-    private CreatedAt createdAt;
-    private UpdatedAt updatedAt;
+    private String tokenHash;
+    private String otpHash;
+    private Instant expiresAt;
+    private Instant resendAvailableAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public AccountActivation() {}
 
-    public AccountActivation(Id id, Account account, TokenHash tokenHash, OptHash otpHash, ExpiresAt expiresAt, ResendAvailableAt resendAvailableAt, CreatedAt createdAt, UpdatedAt updatedAt) {
+    public AccountActivation(
+            UUID id,
+            Account account,
+            String tokenHash,
+            String otpHash,
+            Instant expiresAt,
+            Instant resendAvailableAt,
+            Instant createdAt,
+            Instant updatedAt
+    ) {
         this.id = id;
         this.account = account;
         this.tokenHash = tokenHash;
@@ -25,11 +35,11 @@ public class AccountActivation {
         this.updatedAt = updatedAt;
     }
 
-    public Id getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Id id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -41,51 +51,51 @@ public class AccountActivation {
         this.account = account;
     }
 
-    public TokenHash getTokenHash() {
+    public String getTokenHash() {
         return tokenHash;
     }
 
-    public void setTokenHash(TokenHash tokenHash) {
+    public void setTokenHash(String tokenHash) {
         this.tokenHash = tokenHash;
     }
 
-    public OptHash getOtpHash() {
+    public String getOtpHash() {
         return otpHash;
     }
 
-    public void setOptHash(OptHash optHash) {
-        this.otpHash = optHash;
+    public void setOtpHash(String otpHash) {
+        this.otpHash = otpHash;
     }
 
-    public ExpiresAt getExpiresAt() {
+    public Instant getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(ExpiresAt expiresAt) {
+    public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
     }
 
-    public ResendAvailableAt getResendAvailableAt() {
+    public Instant getResendAvailableAt() {
         return resendAvailableAt;
     }
 
-    public void setResendAvailableAt(ResendAvailableAt resendAvailableAt) {
+    public void setResendAvailableAt(Instant resendAvailableAt) {
         this.resendAvailableAt = resendAvailableAt;
     }
 
-    public CreatedAt getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(CreatedAt createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public UpdatedAt getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(UpdatedAt updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

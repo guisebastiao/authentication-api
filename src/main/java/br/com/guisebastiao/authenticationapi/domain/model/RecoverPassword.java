@@ -1,20 +1,30 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
-import br.com.guisebastiao.authenticationapi.domain.valueobject.*;
+import java.time.Instant;
+import java.util.UUID;
 
 public class RecoverPassword {
-    private Id id;
+    private UUID id;
     private Account account;
-    private TokenHash tokenHash;
-    private ExpiresAt expiresAt;
-    private UsedAt usedAt;
-    private ResendAvailableAt resendAvailableAt;
-    private CreatedAt createdAt;
-    private UpdatedAt updatedAt;
+    private String tokenHash;
+    private Instant expiresAt;
+    private Instant usedAt;
+    private Instant resendAvailableAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public RecoverPassword() {}
 
-    public RecoverPassword(Id id, Account account, TokenHash tokenHash, ExpiresAt expiresAt, UsedAt usedAt, ResendAvailableAt resendAvailableAt, CreatedAt createdAt, UpdatedAt updatedAt) {
+    public RecoverPassword(
+            UUID id,
+            Account account,
+            String tokenHash,
+            Instant expiresAt,
+            Instant usedAt,
+            Instant resendAvailableAt,
+            Instant createdAt,
+            Instant updatedAt
+    ) {
         this.id = id;
         this.account = account;
         this.tokenHash = tokenHash;
@@ -25,11 +35,11 @@ public class RecoverPassword {
         this.updatedAt = updatedAt;
     }
 
-    public Id getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Id id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -41,51 +51,51 @@ public class RecoverPassword {
         this.account = account;
     }
 
-    public TokenHash getTokenHash() {
+    public String getTokenHash() {
         return tokenHash;
     }
 
-    public void setTokenHash(TokenHash tokenHash) {
+    public void setTokenHash(String tokenHash) {
         this.tokenHash = tokenHash;
     }
 
-    public ExpiresAt getExpiresAt() {
+    public Instant getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(ExpiresAt expiresAt) {
+    public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
     }
 
-    public UsedAt getUsedAt() {
+    public Instant getUsedAt() {
         return usedAt;
     }
 
-    public void setUsedAt(UsedAt usedAt) {
+    public void setUsedAt(Instant usedAt) {
         this.usedAt = usedAt;
     }
 
-    public ResendAvailableAt getResendAvailableAt() {
+    public Instant getResendAvailableAt() {
         return resendAvailableAt;
     }
 
-    public void setResendAvailableAt(ResendAvailableAt resendAvailableAt) {
+    public void setResendAvailableAt(Instant resendAvailableAt) {
         this.resendAvailableAt = resendAvailableAt;
     }
 
-    public CreatedAt getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(CreatedAt createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public UpdatedAt getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(UpdatedAt updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

@@ -1,23 +1,33 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
 import br.com.guisebastiao.authenticationapi.domain.enums.AccountStatus;
-import br.com.guisebastiao.authenticationapi.domain.valueobject.*;
 
+import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 public class Account {
-    private Id id;
+    private UUID id;
     private Set<AccountRole> roles;
-    private Email email;
-    private PasswordHash passwordHash;
+    private String email;
+    private String passwordHash;
     private AccountStatus status;
-    private DisabledAt disabledAt;
-    private CreatedAt createdAt;
-    private UpdatedAt updatedAt;
+    private Instant disabledAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public Account() {}
 
-    public Account(Id id, Set<AccountRole> roles, Email email, PasswordHash passwordHash, AccountStatus status, DisabledAt disabledAt, CreatedAt createdAt, UpdatedAt updatedAt) {
+    public Account(
+            UUID id,
+            Set<AccountRole> roles,
+            String email,
+            String passwordHash,
+            AccountStatus status,
+            Instant disabledAt,
+            Instant createdAt,
+            Instant updatedAt
+    ) {
         this.id = id;
         this.roles = roles;
         this.email = email;
@@ -28,11 +38,11 @@ public class Account {
         this.updatedAt = updatedAt;
     }
 
-    public Id getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Id id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -44,19 +54,19 @@ public class Account {
         this.roles = roles;
     }
 
-    public Email getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(Email email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public PasswordHash getPasswordHash() {
+    public String getPasswordHash() {
         return passwordHash;
     }
 
-    public void setPasswordHash(PasswordHash passwordHash) {
+    public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
 
@@ -68,27 +78,27 @@ public class Account {
         this.status = status;
     }
 
-    public DisabledAt getDisabledAt() {
+    public Instant getDisabledAt() {
         return disabledAt;
     }
 
-    public void setDisabledAt(DisabledAt disabledAt) {
+    public void setDisabledAt(Instant disabledAt) {
         this.disabledAt = disabledAt;
     }
 
-    public CreatedAt getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(CreatedAt createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public UpdatedAt getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(UpdatedAt updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

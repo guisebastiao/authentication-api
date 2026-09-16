@@ -11,7 +11,12 @@ public class AccountDevice {
 
     public AccountDevice() {}
 
-    public AccountDevice(Account account, Device device, IpAddress ipAddress, LastSeenAt lastSeenAt) {
+    public AccountDevice(
+            Account account,
+            Device device,
+            IpAddress ipAddress,
+            LastSeenAt lastSeenAt
+    ) {
         this.account = account;
         this.device = device;
         this.ipAddress = ipAddress;

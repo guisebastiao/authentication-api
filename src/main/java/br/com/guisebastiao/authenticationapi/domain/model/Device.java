@@ -1,21 +1,32 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
 import br.com.guisebastiao.authenticationapi.domain.enums.DeviceType;
-import br.com.guisebastiao.authenticationapi.domain.valueobject.*;
+
+import java.time.Instant;
+import java.util.UUID;
 
 public class Device {
-    private Id id;
-    private IdentifierHash identifierHash;
-    private DeviceName name;
+    private UUID id;
+    private String identifierHash;
+    private String name;
     private DeviceType type;
-    private OS os;
-    private UserAgent userAgent;
-    private CreatedAt createdAt;
-    private UpdatedAt updatedAt;
+    private String os;
+    private String userAgent;
+    private Instant createdAt;
+    private String updatedAt;
 
     public Device() {}
 
-    public Device(Id id, IdentifierHash identifierHash, DeviceName name, DeviceType type, OS os, UserAgent userAgent, CreatedAt createdAt, UpdatedAt updatedAt) {
+    public Device(
+            UUID id,
+            String identifierHash,
+            String name,
+            DeviceType type,
+            String os,
+            String userAgent,
+            Instant createdAt,
+            String updatedAt
+    ) {
         this.id = id;
         this.identifierHash = identifierHash;
         this.name = name;
@@ -26,27 +37,27 @@ public class Device {
         this.updatedAt = updatedAt;
     }
 
-    public Id getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Id id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public IdentifierHash getIdentifierHash() {
+    public String getIdentifierHash() {
         return identifierHash;
     }
 
-    public void setIdentifierHash(IdentifierHash identifierHash) {
+    public void setIdentifierHash(String identifierHash) {
         this.identifierHash = identifierHash;
     }
 
-    public DeviceName getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(DeviceName name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -58,35 +69,35 @@ public class Device {
         this.type = type;
     }
 
-    public OS getOs() {
+    public String getOs() {
         return os;
     }
 
-    public void setOs(OS os) {
+    public void setOs(String os) {
         this.os = os;
     }
 
-    public UserAgent getUserAgent() {
+    public String getUserAgent() {
         return userAgent;
     }
 
-    public void setUserAgent(UserAgent userAgent) {
+    public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
     }
 
-    public CreatedAt getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(CreatedAt createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public UpdatedAt getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(UpdatedAt updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
