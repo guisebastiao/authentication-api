@@ -1,13 +1,20 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
+import br.com.guisebastiao.authenticationapi.domain.enums.DeviceType;
+
 import java.time.Instant;
 import java.util.UUID;
 
 public class Session {
     private UUID id;
-    private AccountDevice accountDevice;
-    private String identifierHash;
+    private Account account;
+    private String tokenHash;
+    private DeviceType type;
+    private String userAgent;
+    private String ipAddress;
     private Instant revokedAt;
+    private Instant lastSeenAt;
+    private Instant expiresAt;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -15,16 +22,26 @@ public class Session {
 
     public Session(
             UUID id,
-            AccountDevice accountDevice,
-            String identifierHash,
+            Account account,
+            String tokenHash,
+            DeviceType type,
+            String userAgent,
+            String ipAddress,
             Instant revokedAt,
+            Instant lastSeenAt,
+            Instant expiresAt,
             Instant createdAt,
             Instant updatedAt
     ) {
         this.id = id;
-        this.accountDevice = accountDevice;
-        this.identifierHash = identifierHash;
+        this.account = account;
+        this.tokenHash = tokenHash;
+        this.type = type;
+        this.userAgent = userAgent;
+        this.ipAddress = ipAddress;
         this.revokedAt = revokedAt;
+        this.lastSeenAt = lastSeenAt;
+        this.expiresAt = expiresAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -37,20 +54,52 @@ public class Session {
         this.id = id;
     }
 
-    public AccountDevice getAccountDevice() {
-        return accountDevice;
+    public Account getAccountDevice() {
+        return account;
     }
 
-    public void setAccountDevice(AccountDevice accountDevice) {
-        this.accountDevice = accountDevice;
+    public void setAccountDevice(Account account) {
+        this.account = account;
     }
 
-    public String getIdentifierHash() {
-        return identifierHash;
+    public String getTokenHash() {
+        return tokenHash;
     }
 
-    public void setIdentifierHash(String identifierHash) {
-        this.identifierHash = identifierHash;
+    public void setTokenHash(String tokenHash) {
+        this.tokenHash = tokenHash;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public DeviceType getType() {
+        return type;
+    }
+
+    public void setType(DeviceType type) {
+        this.type = type;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public Instant getRevokedAt() {
@@ -59,6 +108,22 @@ public class Session {
 
     public void setRevokedAt(Instant revokedAt) {
         this.revokedAt = revokedAt;
+    }
+
+    public Instant getLastSeenAt() {
+        return lastSeenAt;
+    }
+
+    public void setLastSeenAt(Instant lastSeenAt) {
+        this.lastSeenAt = lastSeenAt;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
     public Instant getCreatedAt() {

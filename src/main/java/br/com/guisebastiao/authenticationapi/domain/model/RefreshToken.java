@@ -6,9 +6,9 @@ import java.util.UUID;
 public class RefreshToken {
     private UUID id;
     private Session session;
-    private String identifierHash;
-    private Instant expiresAt;
-    private Instant revokedAt;
+    private RefreshToken revokedBy;
+    private String tokenHash;
+    private Instant usedAt;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -17,17 +17,17 @@ public class RefreshToken {
     public RefreshToken(
             UUID id,
             Session session,
-            String identifierHash,
-            Instant expiresAt,
-            Instant revokedAt,
+            RefreshToken revokedBy,
+            String tokenHash,
+            Instant usedAt,
             Instant createdAt,
             Instant updatedAt
     ) {
         this.id = id;
         this.session = session;
-        this.identifierHash = identifierHash;
-        this.expiresAt = expiresAt;
-        this.revokedAt = revokedAt;
+        this.revokedBy = revokedBy;
+        this.tokenHash = tokenHash;
+        this.usedAt = usedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -48,28 +48,28 @@ public class RefreshToken {
         this.session = session;
     }
 
-    public String getIdentifierHash() {
-        return identifierHash;
+    public RefreshToken getRevokedBy() {
+        return revokedBy;
     }
 
-    public void setIdentifierHash(String identifierHash) {
-        this.identifierHash = identifierHash;
+    public void setRevokedBy(RefreshToken revokedBy) {
+        this.revokedBy = revokedBy;
     }
 
-    public Instant getExpiresAt() {
-        return expiresAt;
+    public String getTokenHash() {
+        return tokenHash;
     }
 
-    public void setExpiresAt(Instant expiresAt) {
-        this.expiresAt = expiresAt;
+    public void setTokenHash(String tokenHash) {
+        this.tokenHash = tokenHash;
     }
 
-    public Instant getRevokedAt() {
-        return revokedAt;
+    public Instant getUsedAt() {
+        return usedAt;
     }
 
-    public void setRevokedAt(Instant revokedAt) {
-        this.revokedAt = revokedAt;
+    public void setUsedAt(Instant usedAt) {
+        this.usedAt = usedAt;
     }
 
     public Instant getCreatedAt() {
