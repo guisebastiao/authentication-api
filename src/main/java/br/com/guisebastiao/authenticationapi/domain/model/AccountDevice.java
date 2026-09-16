@@ -1,21 +1,20 @@
 package br.com.guisebastiao.authenticationapi.domain.model;
 
-import br.com.guisebastiao.authenticationapi.domain.valueobject.IpAddress;
-import br.com.guisebastiao.authenticationapi.domain.valueobject.LastSeenAt;
+import java.time.Instant;
 
 public class AccountDevice {
     private Account account;
     private Device device;
-    private IpAddress ipAddress;
-    private LastSeenAt lastSeenAt;
+    private String ipAddress;
+    private Instant lastSeenAt;
 
     public AccountDevice() {}
 
     public AccountDevice(
             Account account,
             Device device,
-            IpAddress ipAddress,
-            LastSeenAt lastSeenAt
+            String ipAddress,
+            Instant lastSeenAt
     ) {
         this.account = account;
         this.device = device;
@@ -39,19 +38,19 @@ public class AccountDevice {
         this.device = device;
     }
 
-    public IpAddress getIpAddress() {
+    public String getIpAddress() {
         return ipAddress;
     }
 
-    public void setIpAddress(IpAddress ipAddress) {
+    public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
     }
 
-    public LastSeenAt getLastSeenAt() {
+    public Instant getLastSeenAt() {
         return lastSeenAt;
     }
 
-    public void setLastSeenAt(LastSeenAt lastSeenAt) {
+    public void setLastSeenAt(Instant lastSeenAt) {
         this.lastSeenAt = lastSeenAt;
     }
 }
