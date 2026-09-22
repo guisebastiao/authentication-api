@@ -8,10 +8,11 @@ import java.util.UUID;
 public class Session {
     private UUID id;
     private Account account;
-    private String tokenHash;
+    private String sessionTokenHash;
     private DeviceType type;
     private String userAgent;
     private String ipAddress;
+    private String location;
     private Instant revokedAt;
     private Instant lastSeenAt;
     private Instant expiresAt;
@@ -23,10 +24,11 @@ public class Session {
     public Session(
             UUID id,
             Account account,
-            String tokenHash,
+            String sessionTokenHash,
             DeviceType type,
             String userAgent,
             String ipAddress,
+            String location,
             Instant revokedAt,
             Instant lastSeenAt,
             Instant expiresAt,
@@ -35,10 +37,11 @@ public class Session {
     ) {
         this.id = id;
         this.account = account;
-        this.tokenHash = tokenHash;
+        this.sessionTokenHash = sessionTokenHash;
         this.type = type;
         this.userAgent = userAgent;
         this.ipAddress = ipAddress;
+        this.location = location;
         this.revokedAt = revokedAt;
         this.lastSeenAt = lastSeenAt;
         this.expiresAt = expiresAt;
@@ -54,28 +57,20 @@ public class Session {
         this.id = id;
     }
 
-    public Account getAccountDevice() {
-        return account;
-    }
-
-    public void setAccountDevice(Account account) {
-        this.account = account;
-    }
-
-    public String getTokenHash() {
-        return tokenHash;
-    }
-
-    public void setTokenHash(String tokenHash) {
-        this.tokenHash = tokenHash;
-    }
-
     public Account getAccount() {
         return account;
     }
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public String getSessionTokenHash() {
+        return sessionTokenHash;
+    }
+
+    public void setSessionTokenHash(String sessionTokenHash) {
+        this.sessionTokenHash = sessionTokenHash;
     }
 
     public DeviceType getType() {
@@ -100,6 +95,14 @@ public class Session {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Instant getRevokedAt() {

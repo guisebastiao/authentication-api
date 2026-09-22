@@ -3,31 +3,31 @@ package br.com.guisebastiao.authenticationapi.domain.model;
 import java.time.Instant;
 import java.util.UUID;
 
-public class RefreshToken {
+public class Refresh {
     private UUID id;
     private Session session;
-    private RefreshToken revokedBy;
-    private String tokenHash;
-    private Instant usedAt;
+    private Refresh replacedBy;
+    private String refreshTokenHash;
+    private Instant revokedAt;
     private Instant createdAt;
     private Instant updatedAt;
 
-    public RefreshToken() {}
+    public Refresh() {}
 
-    public RefreshToken(
+    public Refresh(
             UUID id,
             Session session,
-            RefreshToken revokedBy,
-            String tokenHash,
-            Instant usedAt,
+            Refresh replacedBy,
+            String refreshTokenHash,
+            Instant revokedAt,
             Instant createdAt,
             Instant updatedAt
     ) {
         this.id = id;
         this.session = session;
-        this.revokedBy = revokedBy;
-        this.tokenHash = tokenHash;
-        this.usedAt = usedAt;
+        this.replacedBy = replacedBy;
+        this.refreshTokenHash = refreshTokenHash;
+        this.revokedAt = revokedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -48,28 +48,28 @@ public class RefreshToken {
         this.session = session;
     }
 
-    public RefreshToken getRevokedBy() {
-        return revokedBy;
+    public Refresh getReplacedBy() {
+        return replacedBy;
     }
 
-    public void setRevokedBy(RefreshToken revokedBy) {
-        this.revokedBy = revokedBy;
+    public void setReplacedBy(Refresh replacedBy) {
+        this.replacedBy = replacedBy;
     }
 
-    public String getTokenHash() {
-        return tokenHash;
+    public String getRefreshTokenHash() {
+        return refreshTokenHash;
     }
 
-    public void setTokenHash(String tokenHash) {
-        this.tokenHash = tokenHash;
+    public void setRefreshTokenHash(String refreshTokenHash) {
+        this.refreshTokenHash = refreshTokenHash;
     }
 
-    public Instant getUsedAt() {
-        return usedAt;
+    public Instant getRevokedAt() {
+        return revokedAt;
     }
 
-    public void setUsedAt(Instant usedAt) {
-        this.usedAt = usedAt;
+    public void setRevokedAt(Instant revokedAt) {
+        this.revokedAt = revokedAt;
     }
 
     public Instant getCreatedAt() {

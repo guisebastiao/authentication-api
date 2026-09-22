@@ -6,10 +6,11 @@ import java.util.UUID;
 public class AccountActivation {
     private UUID id;
     private Account account;
-    private String tokenHash;
-    private String otpHash;
+    private String activationToken;
+    private String otpCodeHash;
     private Instant expiresAt;
     private Instant resendAvailableAt;
+    private Instant activatedAt;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -18,19 +19,21 @@ public class AccountActivation {
     public AccountActivation(
             UUID id,
             Account account,
-            String tokenHash,
-            String otpHash,
+            String activationToken,
+            String otpCodeHash,
             Instant expiresAt,
             Instant resendAvailableAt,
+            Instant activatedAt,
             Instant createdAt,
             Instant updatedAt
     ) {
         this.id = id;
         this.account = account;
-        this.tokenHash = tokenHash;
-        this.otpHash = otpHash;
+        this.activationToken = activationToken;
+        this.otpCodeHash = otpCodeHash;
         this.expiresAt = expiresAt;
         this.resendAvailableAt = resendAvailableAt;
+        this.activatedAt = activatedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -51,20 +54,20 @@ public class AccountActivation {
         this.account = account;
     }
 
-    public String getTokenHash() {
-        return tokenHash;
+    public String getActivationToken() {
+        return activationToken;
     }
 
-    public void setTokenHash(String tokenHash) {
-        this.tokenHash = tokenHash;
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
     }
 
-    public String getOtpHash() {
-        return otpHash;
+    public String getOtpCodeHash() {
+        return otpCodeHash;
     }
 
-    public void setOtpHash(String otpHash) {
-        this.otpHash = otpHash;
+    public void setOtpCodeHash(String otpCodeHash) {
+        this.otpCodeHash = otpCodeHash;
     }
 
     public Instant getExpiresAt() {
@@ -81,6 +84,14 @@ public class AccountActivation {
 
     public void setResendAvailableAt(Instant resendAvailableAt) {
         this.resendAvailableAt = resendAvailableAt;
+    }
+
+    public Instant getActivatedAt() {
+        return activatedAt;
+    }
+
+    public void setActivatedAt(Instant activatedAt) {
+        this.activatedAt = activatedAt;
     }
 
     public Instant getCreatedAt() {

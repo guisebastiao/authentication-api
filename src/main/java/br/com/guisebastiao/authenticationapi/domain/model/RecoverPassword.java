@@ -6,9 +6,11 @@ import java.util.UUID;
 public class RecoverPassword {
     private UUID id;
     private Account account;
-    private String tokenHash;
+    private String recoverToken;
+    private String otpCodeHash;
     private Instant expiresAt;
     private Instant usedAt;
+    private Instant verifiedAt;
     private Instant resendAvailableAt;
     private Instant createdAt;
     private Instant updatedAt;
@@ -18,18 +20,22 @@ public class RecoverPassword {
     public RecoverPassword(
             UUID id,
             Account account,
-            String tokenHash,
+            String recoverToken,
+            String otpCodeHash,
             Instant expiresAt,
             Instant usedAt,
+            Instant verifiedAt,
             Instant resendAvailableAt,
             Instant createdAt,
             Instant updatedAt
     ) {
         this.id = id;
         this.account = account;
-        this.tokenHash = tokenHash;
+        this.recoverToken = recoverToken;
+        this.otpCodeHash = otpCodeHash;
         this.expiresAt = expiresAt;
         this.usedAt = usedAt;
+        this.verifiedAt = verifiedAt;
         this.resendAvailableAt = resendAvailableAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -51,12 +57,20 @@ public class RecoverPassword {
         this.account = account;
     }
 
-    public String getTokenHash() {
-        return tokenHash;
+    public String getRecoverToken() {
+        return recoverToken;
     }
 
-    public void setTokenHash(String tokenHash) {
-        this.tokenHash = tokenHash;
+    public void setRecoverToken(String recoverToken) {
+        this.recoverToken = recoverToken;
+    }
+
+    public String getOtpCodeHash() {
+        return otpCodeHash;
+    }
+
+    public void setOtpCodeHash(String otpCodeHash) {
+        this.otpCodeHash = otpCodeHash;
     }
 
     public Instant getExpiresAt() {
@@ -73,6 +87,14 @@ public class RecoverPassword {
 
     public void setUsedAt(Instant usedAt) {
         this.usedAt = usedAt;
+    }
+
+    public Instant getVerifiedAt() {
+        return verifiedAt;
+    }
+
+    public void setVerifiedAt(Instant verifiedAt) {
+        this.verifiedAt = verifiedAt;
     }
 
     public Instant getResendAvailableAt() {
