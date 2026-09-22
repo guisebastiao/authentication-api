@@ -1,12 +1,12 @@
 package br.com.guisebastiao.authenticationapi.application.service;
 
-import br.com.guisebastiao.authenticationapi.application.port.in.SendAccountActivationEmailUseCase;
+import br.com.guisebastiao.authenticationapi.application.port.in.SendRecoverPasswordEmailUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.EmailSenderPort;
 
 import java.time.Instant;
 import java.util.Map;
 
-public class SendRecoverPasswordEmailService implements SendAccountActivationEmailUseCase {
+public class SendRecoverPasswordEmailService implements SendRecoverPasswordEmailUseCase {
     private static final String TEMPLATE = "recover-password-template";
 
     private final EmailSenderPort emailSender;

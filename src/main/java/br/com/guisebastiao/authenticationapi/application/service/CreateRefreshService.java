@@ -10,17 +10,17 @@ import br.com.guisebastiao.authenticationapi.domain.model.Session;
 public class CreateRefreshService implements CreateRefreshUseCase {
     private static final int REFRESH_TOKEN_SIZE = 32;
 
-    private final RefreshRepositoryPort refreshRepository;
     private final SecureRandomGeneratorPort secureRandomGenerator;
+    private final RefreshRepositoryPort refreshRepository;
     private final SecureHasherPort secureHasher;
 
     public CreateRefreshService(
-            RefreshRepositoryPort refreshRepository,
             SecureRandomGeneratorPort secureRandomGenerator,
+            RefreshRepositoryPort refreshRepository,
             SecureHasherPort secureHasher
     ) {
-        this.refreshRepository = refreshRepository;
         this.secureRandomGenerator = secureRandomGenerator;
+        this.refreshRepository = refreshRepository;
         this.secureHasher = secureHasher;
     }
 
