@@ -2,6 +2,7 @@ package br.com.guisebastiao.authenticationapi.application.service;
 
 import br.com.guisebastiao.authenticationapi.application.command.ChangePasswordCommand;
 import br.com.guisebastiao.authenticationapi.application.port.in.ChangePasswordUseCase;
+import br.com.guisebastiao.authenticationapi.application.port.in.SignOutAllUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.AccountRepositoryPort;
 import br.com.guisebastiao.authenticationapi.application.port.out.PasswordEncoderPort;
 import br.com.guisebastiao.authenticationapi.domain.exception.AccountInvalidCredentialsException;
@@ -10,13 +11,16 @@ import br.com.guisebastiao.authenticationapi.domain.model.Account;
 
 public class ChangePasswordService implements ChangePasswordUseCase {
     private final AccountRepositoryPort accountRepository;
+    private final SignOutAllUseCase signOutAllUseCase;
     private final PasswordEncoderPort passwordEncoder;
 
     public ChangePasswordService(
             AccountRepositoryPort accountRepository,
+            SignOutAllUseCase signOutAllUseCase,
             PasswordEncoderPort passwordEncoder
     ) {
         this.accountRepository = accountRepository;
+        this.signOutAllUseCase = signOutAllUseCase;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -39,5 +43,7 @@ public class ChangePasswordService implements ChangePasswordUseCase {
         account.setPasswordHash(newPasswordHash);
 
         accountRepository.save(account);
+
+        signOutAllUseCase.execute(account);
     }
 }

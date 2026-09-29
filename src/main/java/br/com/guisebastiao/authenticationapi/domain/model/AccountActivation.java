@@ -6,7 +6,7 @@ import java.util.UUID;
 public class AccountActivation {
     private UUID id;
     private Account account;
-    private String activationToken;
+    private String activationTokenHash;
     private String otpCodeHash;
     private Instant expiresAt;
     private Instant resendAvailableAt;
@@ -19,7 +19,7 @@ public class AccountActivation {
     public AccountActivation(
             UUID id,
             Account account,
-            String activationToken,
+            String activationTokenHash,
             String otpCodeHash,
             Instant expiresAt,
             Instant resendAvailableAt,
@@ -29,7 +29,7 @@ public class AccountActivation {
     ) {
         this.id = id;
         this.account = account;
-        this.activationToken = activationToken;
+        this.activationTokenHash = activationTokenHash;
         this.otpCodeHash = otpCodeHash;
         this.expiresAt = expiresAt;
         this.resendAvailableAt = resendAvailableAt;
@@ -54,12 +54,12 @@ public class AccountActivation {
         this.account = account;
     }
 
-    public String getActivationToken() {
-        return activationToken;
+    public String getActivationTokenHash() {
+        return activationTokenHash;
     }
 
-    public void setActivationToken(String activationToken) {
-        this.activationToken = activationToken;
+    public void setActivationTokenHash(String activationTokenHash) {
+        this.activationTokenHash = activationTokenHash;
     }
 
     public String getOtpCodeHash() {

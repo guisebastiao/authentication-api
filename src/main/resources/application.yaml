@@ -28,6 +28,18 @@ spring:
     resources:
       add-mappings: false
 
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USER}
+    password: ${MAIL_PASS}
+    properties:
+      mail:
+        SMTP:
+          auth: false
+          STARTTLS:
+            enable: false
+
   rabbitmq:
     host: ${MQ_HOST}
     port: ${MQ_PORT}
@@ -45,28 +57,24 @@ server:
   port: 8080
 
 app:
-  issuer: authentication-api
   frontend-url: ${FRONTEND_URL}
+  email-from: ${MAIL_FROM}
 
   google:
     client-id: ${GOOGLE_CLIENT_ID}
 
-  cookies:
-    access-token:
-      name: ${ACCESS_TOKEN_COOKIE_NAME}
-    session:
-      name: ${SESSION_COOKIE_NAME}
-    device:
-      name: ${DEVICE_COOKIE_NAME}
+  rate-limit:
+    global:
+      capacity: ${RATE_LIMIT_GLOBAL_CAPACITY}
+      refill-tokens: ${RATE_LIMIT_GLOBAL_REFILL_TOKENS}
+      duration: ${RATE_LIMIT_GLOBAL_DURATION}
 
   secrets:
-    access-token:
-      value: ${ACCESS_TOKEN_SECRET}
-    hmac:
-      value: ${HMAC_SECRET}
+    issuer: authentication-api
+    access-token: ${ACCESS_TOKEN_SECRET}
+    hmac: ${HMAC_SECRET}
 
-  mail:
-    from: ${MAIL_FROM}
+
 
 # ============
 # DEVELOPMENT

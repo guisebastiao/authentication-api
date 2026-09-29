@@ -1,14 +1,11 @@
 package br.com.guisebastiao.authenticationapi.application.service;
 
-import br.com.guisebastiao.authenticationapi.application.command.AccountActivateCommand;
+import br.com.guisebastiao.authenticationapi.application.command.AccountActivationCommand;
 import br.com.guisebastiao.authenticationapi.application.port.in.AccountActivateUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.AccountActivationRepositoryPort;
 import br.com.guisebastiao.authenticationapi.application.port.out.AccountRepositoryPort;
 import br.com.guisebastiao.authenticationapi.application.port.out.PasswordEncoderPort;
-import br.com.guisebastiao.authenticationapi.application.port.out.RateLimiterPort;
-import br.com.guisebastiao.authenticationapi.application.ratelimit.RateLimitKey;
-import br.com.guisebastiao.authenticationapi.application.ratelimit.RateLimitPolicy;
-import br.com.guisebastiao.authenticationapi.application.result.RateLimitResult;
+import br.com.guisebastiao.authenticationapi.application.port.out.SecureHasherPort;
 import br.com.guisebastiao.authenticationapi.domain.enums.AccountStatus;
 import br.com.guisebastiao.authenticationapi.domain.exception.*;
 import br.com.guisebastiao.authenticationapi.domain.model.Account;
@@ -20,33 +17,26 @@ public class AccountActivateService implements AccountActivateUseCase {
     private final AccountActivationRepositoryPort accountActivationRepository;
     private final AccountRepositoryPort accountRepository;
     private final PasswordEncoderPort passwordEncoder;
-    private final RateLimiterPort rateLimiter;
+    private final SecureHasherPort secureHasher;
 
     public AccountActivateService(
             AccountActivationRepositoryPort accountActivationRepository,
             AccountRepositoryPort accountRepository,
             PasswordEncoderPort passwordEncoder,
-            RateLimiterPort rateLimiter
+            SecureHasherPort secureHasher
     ) {
         this.accountActivationRepository = accountActivationRepository;
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
-        this.rateLimiter = rateLimiter;
+        this.secureHasher = secureHasher;
     }
 
     @Override
-    public void execute(AccountActivateCommand command, String ipAddress) {
-        RateLimitResult rateLimit = rateLimiter.consume(
-                RateLimitPolicy.ACTIVATE_ACCOUNT,
-                RateLimitKey.ip(ipAddress)
-        );
-
-        if (!rateLimit.allowed()) {
-            throw new RateLimitExceededException(rateLimit.retryAfterSeconds());
-        }
+    public void execute(AccountActivationCommand command) {
+        String activationTokenHash = secureHasher.hash(command.activationToken());
 
         AccountActivation accountActivation = accountActivationRepository
-                .findByActivationToken(command.activationToken())
+                .findByActivationTokenHash(activationTokenHash)
                 .orElseThrow(AccountActivationNotFoundException::new);
 
         validateAccountActivation(accountActivation);

@@ -1,5 +1,6 @@
 package br.com.guisebastiao.authenticationapi.application.service;
 
+import br.com.guisebastiao.authenticationapi.adapter.out.smtp.EmailSendPaylod;
 import br.com.guisebastiao.authenticationapi.application.port.in.SendRecoverPasswordEmailUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.EmailSenderPort;
 
@@ -21,10 +22,9 @@ public class SendRecoverPasswordEmailService implements SendRecoverPasswordEmail
 
         Map<String, Object> variables = Map.of(
                 "email", email,
-                "otpCode", otpCode,
-                "expiresAt", expiresAt
+                "otpCode", otpCode
         );
 
-        emailSender.send(TEMPLATE, email, subject, variables);
+        emailSender.send(new EmailSendPaylod(TEMPLATE, email, subject, variables));
     }
 }

@@ -9,6 +9,6 @@ import java.util.UUID;
 public interface AccountActivationRepositoryPort {
     void save(List<AccountActivation> accountActivation);
     AccountActivation save(AccountActivation accountActivation);
-    Optional<AccountActivation> findByActivationToken(String activationToken);
+    Optional<AccountActivation> findByActivationTokenHash(String activationTokenHash);
     List<AccountActivation> findAllByAccountIdAndNotExpired(UUID accountId);
 }

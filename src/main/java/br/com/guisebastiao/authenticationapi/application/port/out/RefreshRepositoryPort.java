@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface RefreshRepositoryPort {
     Refresh save(Refresh refresh);
 
-    void save(List<Refresh> refresh);
+    void save(List<Refresh> refreshes);
 
     Optional<Refresh> findByRefreshTokenHash(String refreshTokenHash);
 

@@ -47,7 +47,6 @@
         <nimbus-jose-jwt.version>10.9.1</nimbus-jose-jwt.version>
         <google-api-client.version>2.8.1</google-api-client.version>
         <bucket4j.version>8.19.0</bucket4j.version>
-        <maxmind.version>5.2.0</maxmind.version>
     </properties>
 
     <dependencies>
@@ -102,12 +101,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.maxmind.geoip2</groupId>
-            <artifactId>geoip2</artifactId>
-            <version>${maxmind.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

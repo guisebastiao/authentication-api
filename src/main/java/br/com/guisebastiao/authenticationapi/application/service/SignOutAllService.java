@@ -27,7 +27,7 @@ public class SignOutAllService implements SignOutAllUseCase {
     public void execute(Account account) {
         Instant revokedAt = Instant.now();
 
-        List<Session> sessions = sessionRepository.findAllByUserIdAndNotRevoked(account.getId());
+        List<Session> sessions = sessionRepository.findAllByAccountIdAndNotRevoked(account.getId());
 
         if (sessions.isEmpty()) {
             return;

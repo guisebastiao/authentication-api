@@ -6,7 +6,7 @@ import java.util.UUID;
 public class RecoverPassword {
     private UUID id;
     private Account account;
-    private String recoverToken;
+    private String recoverTokenHash;
     private String otpCodeHash;
     private Instant expiresAt;
     private Instant usedAt;
@@ -20,7 +20,7 @@ public class RecoverPassword {
     public RecoverPassword(
             UUID id,
             Account account,
-            String recoverToken,
+            String recoverTokenHash,
             String otpCodeHash,
             Instant expiresAt,
             Instant usedAt,
@@ -31,7 +31,7 @@ public class RecoverPassword {
     ) {
         this.id = id;
         this.account = account;
-        this.recoverToken = recoverToken;
+        this.recoverTokenHash = recoverTokenHash;
         this.otpCodeHash = otpCodeHash;
         this.expiresAt = expiresAt;
         this.usedAt = usedAt;
@@ -57,12 +57,12 @@ public class RecoverPassword {
         this.account = account;
     }
 
-    public String getRecoverToken() {
-        return recoverToken;
+    public String getRecoverTokenHash() {
+        return recoverTokenHash;
     }
 
-    public void setRecoverToken(String recoverToken) {
-        this.recoverToken = recoverToken;
+    public void setRecoverTokenHash(String recoverTokenHash) {
+        this.recoverTokenHash = recoverTokenHash;
     }
 
     public String getOtpCodeHash() {

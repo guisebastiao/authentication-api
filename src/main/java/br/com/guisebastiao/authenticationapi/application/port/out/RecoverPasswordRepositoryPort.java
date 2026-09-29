@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface RecoverPasswordRepositoryPort {
     RecoverPassword save(RecoverPassword recoverPassword);
 
-    Optional<RecoverPassword> findByRecoverToken(String recoverToken);
+    Optional<RecoverPassword> findByRecoverTokenHash(String recoverTokenHash);
 
-    Optional<RecoverPassword> findActiveByAccountEmail(String email);
+    Optional<RecoverPassword> findByRecoverTokenHashAndNotVerified(String recoverTokenHash);
 }

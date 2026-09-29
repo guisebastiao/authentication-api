@@ -1,7 +1,6 @@
 package br.com.guisebastiao.authenticationapi.application.service;
 
 import br.com.guisebastiao.authenticationapi.application.port.in.CreateAccountActivationUseCase;
-import br.com.guisebastiao.authenticationapi.application.port.in.ResendAccountActivationEmailUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.in.SendAccountActivationEmailUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.*;
 import br.com.guisebastiao.authenticationapi.application.result.AccountActivationResult;
@@ -19,7 +18,6 @@ public class CreateAccountActivationService implements CreateAccountActivationUs
     private static final int RESEND_EMAIL_AVAILABLE_MINUTES = 1;
     private static final int ACTIVATION_TOKEN_SIZE = 32;
 
-    private final ResendAccountActivationEmailUseCase resendAccountActivationEmailUseCase;
     private final SendAccountActivationEmailUseCase sendAccountActivationEmailUseCase;
     private final AccountActivationRepositoryPort accountActivationRepository;
     private final SecureRandomGeneratorPort secureRandomGenerator;
@@ -28,7 +26,6 @@ public class CreateAccountActivationService implements CreateAccountActivationUs
     private final SecureRandom secureRandom;
 
     public CreateAccountActivationService(
-            ResendAccountActivationEmailUseCase resendAccountActivationEmailUseCase,
             SendAccountActivationEmailUseCase sendAccountActivationEmailUseCase,
             AccountActivationRepositoryPort accountActivationRepository,
             SecureRandomGeneratorPort secureRandomGenerator,
@@ -36,7 +33,6 @@ public class CreateAccountActivationService implements CreateAccountActivationUs
             SecureHasherPort secureHasher,
             SecureRandom secureRandom
     ) {
-        this.resendAccountActivationEmailUseCase = resendAccountActivationEmailUseCase;
         this.sendAccountActivationEmailUseCase = sendAccountActivationEmailUseCase;
         this.accountActivationRepository = accountActivationRepository;
         this.secureRandomGenerator = secureRandomGenerator;
@@ -46,20 +42,10 @@ public class CreateAccountActivationService implements CreateAccountActivationUs
     }
 
     @Override
-    public AccountActivationResult execute(Account account, String ipAddress) {
+    public AccountActivationResult execute(Account account) {
         if (account.getStatus() == AccountStatus.ACTIVATED) {
             throw new AccountAlreadyActivatedException();
         }
-
-        AccountActivation existingAccountActivation = accountActivationRepository
-                .findAllByAccountIdAndNotExpired(account.getId()).getFirst();
-
-        if (existingAccountActivation != null) {
-            return resendAccountActivationEmailUseCase.execute(existingAccountActivation.getActivationToken(), ipAddress);
-        }
-
-        String activationToken = secureRandomGenerator.generate(ACTIVATION_TOKEN_SIZE);
-        String activationTokenHash = secureHasher.hash(activationToken);
 
         String otpCode = String.format("%06d", secureRandom.nextInt(1_000_000));
         String otpCodeHash = passwordEncoder.hash(otpCode);
@@ -67,18 +53,21 @@ public class CreateAccountActivationService implements CreateAccountActivationUs
         Instant expiresAt = Instant.now().plus(ACCOUNT_ACTIVATION_EXPIRES_MINUTES, ChronoUnit.MINUTES);
         Instant resendAvailableAt = Instant.now().plus(RESEND_EMAIL_AVAILABLE_MINUTES, ChronoUnit.MINUTES);
 
-        AccountActivation accountActivationEntity = new AccountActivation();
+        String activationToken = secureRandomGenerator.generate(ACTIVATION_TOKEN_SIZE);
 
+        String activationTokenHash = secureHasher.hash(activationToken);
+
+        AccountActivation accountActivationEntity = new AccountActivation();
         accountActivationEntity.setAccount(account);
-        accountActivationEntity.setActivationToken(activationTokenHash);
+        accountActivationEntity.setActivationTokenHash(activationTokenHash);
         accountActivationEntity.setOtpCodeHash(otpCodeHash);
         accountActivationEntity.setExpiresAt(expiresAt);
         accountActivationEntity.setResendAvailableAt(resendAvailableAt);
 
-        AccountActivation accountActivation = accountActivationRepository.save(accountActivationEntity);
+        accountActivationRepository.save(accountActivationEntity);
 
         sendAccountActivationEmailUseCase.execute(account.getEmail(), otpCode, expiresAt);
 
-        return new AccountActivationResult(accountActivation.getId(), activationToken, expiresAt, resendAvailableAt);
+        return new AccountActivationResult(activationToken, expiresAt, resendAvailableAt);
     }
 }

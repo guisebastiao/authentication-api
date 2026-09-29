@@ -4,6 +4,19 @@ import br.com.guisebastiao.authenticationapi.domain.enums.DomainErrorCode;
 
 public class AccountNotActivatedException extends DomainException {
     public AccountNotActivatedException() {
-        super(DomainErrorCode.ACCOUNT_NOT_ACTIVATED);
+        super(
+                DomainErrorCode.ACCOUNT_NOT_ACTIVATED,
+                "The account has not been activated.",
+                403
+        );
+    }
+
+    public AccountNotActivatedException(Object details) {
+        super(
+                DomainErrorCode.ACCOUNT_NOT_ACTIVATED,
+                "The account has not been activated.",
+                403,
+                details
+        );
     }
 }

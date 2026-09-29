@@ -2,9 +2,11 @@ package br.com.guisebastiao.authenticationapi.infrastructure.transaction;
 
 import br.com.guisebastiao.authenticationapi.application.port.in.*;
 import br.com.guisebastiao.authenticationapi.application.service.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,11 +16,27 @@ import java.lang.reflect.Proxy;
 @Configuration
 public class TransactionConfiguration {
 
+    @Bean("transactionTemplate")
+    public TransactionTemplate transactionTemplate(
+            PlatformTransactionManager transactionManager
+    ) {
+        return new TransactionTemplate(transactionManager);
+    }
+
+    @Bean(name = "readOnlyTransactionTemplate")
+    public TransactionTemplate readOnlyTransactionTemplate(
+            PlatformTransactionManager transactionManager
+    ) {
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.setReadOnly(true);
+        return transactionTemplate;
+    }
+
     @Bean
     @Primary
     public AccountActivateUseCase transactionalAccountActivateUseCase(
             AccountActivateService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(AccountActivateUseCase.class, delegate, transactionTemplate);
     }
@@ -27,7 +45,7 @@ public class TransactionConfiguration {
     @Primary
     public ChangePasswordUseCase transactionalChangePasswordUseCase(
             ChangePasswordService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(ChangePasswordUseCase.class, delegate, transactionTemplate);
     }
@@ -36,7 +54,7 @@ public class TransactionConfiguration {
     @Primary
     public CreateAccountActivationUseCase transactionalCreateAccountActivationUseCase(
             CreateAccountActivationService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(CreateAccountActivationUseCase.class, delegate, transactionTemplate);
     }
@@ -45,7 +63,7 @@ public class TransactionConfiguration {
     @Primary
     public CreateAccountUseCase transactionalCreateAccountUseCase(
             CreateAccountService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(CreateAccountUseCase.class, delegate, transactionTemplate);
     }
@@ -54,7 +72,7 @@ public class TransactionConfiguration {
     @Primary
     public CreateRecoverPasswordUseCase transactionalCreateRecoverPasswordUseCase(
             CreateRecoverPasswordService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(CreateRecoverPasswordUseCase.class, delegate, transactionTemplate);
     }
@@ -63,7 +81,7 @@ public class TransactionConfiguration {
     @Primary
     public CreateRefreshUseCase transactionalCreateRefreshUseCase(
             CreateRefreshService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(CreateRefreshUseCase.class, delegate, transactionTemplate);
     }
@@ -72,7 +90,7 @@ public class TransactionConfiguration {
     @Primary
     public CreateSessionUseCase transactionalCreateSessionUseCase(
             CreateSessionService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(CreateSessionUseCase.class, delegate, transactionTemplate);
     }
@@ -81,25 +99,25 @@ public class TransactionConfiguration {
     @Primary
     public DisableAccountUseCase transactionalDisableAccountUseCase(
             DisableAccountService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(DisableAccountUseCase.class, delegate, transactionTemplate);
     }
 
     @Bean
     @Primary
-    public GetAccountActivationUseCase transactionalGetAccountActivationUseCase(
-            GetAccountActivationService delegate,
-            TransactionTemplate transactionTemplate
+    public GetCurrentAccountUseCase transactionalGetCurrentAccountUseCase(
+            GetCurrentAccountService delegate,
+            @Qualifier("readOnlyTransactionTemplate") TransactionTemplate transactionTemplate
     ) {
-        return transactional(GetAccountActivationUseCase.class, delegate, transactionTemplate);
+        return transactional(GetCurrentAccountUseCase.class, delegate, transactionTemplate);
     }
 
     @Bean
     @Primary
     public GetCurrentSessionUseCase transactionalGetCurrentSessionUseCase(
             GetCurrentSessionService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("readOnlyTransactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(GetCurrentSessionUseCase.class, delegate, transactionTemplate);
     }
@@ -108,21 +126,25 @@ public class TransactionConfiguration {
     @Primary
     public GetSessionsUseCase transactionalGetSessionsUseCase(
             GetSessionsService delegate,
-            TransactionTemplate transactionTemplate
+            @Qualifier("readOnlyTransactionTemplate") TransactionTemplate transactionTemplate
     ) {
         return transactional(GetSessionsUseCase.class, delegate, transactionTemplate);
     }
 
     @Bean
     @Primary
-    public GoogleSignUpUseCase transactionalGoogleSignUpUseCase(
-            GoogleSignUpService delegate,
-            TransactionTemplate transactionTemplate
+    public GoogleSignInUseCase transactionalGoogleSignUpUseCase(
+            GoogleSignInService delegate,
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
     ) {
-        return transactional(GoogleSignUpUseCase.class, delegate, transactionTemplate);
+        return transactional(GoogleSignInUseCase.class, delegate, transactionTemplate);
     }
 
     private <T> T transactional(Class<T> useCaseType, T delegate, TransactionTemplate transactionTemplate) {
+        if (!useCaseType.isInterface()) {
+            throw new IllegalArgumentException("%s must be an interface".formatted(useCaseType.getName()));
+        }
+
         return useCaseType.cast(Proxy.newProxyInstance(
                 useCaseType.getClassLoader(),
                 new Class<?>[]{useCaseType},

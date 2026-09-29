@@ -4,6 +4,10 @@ import br.com.guisebastiao.authenticationapi.domain.enums.DomainErrorCode;
 
 public class AccountActivationNotFoundException extends DomainException {
     public AccountActivationNotFoundException() {
-        super(DomainErrorCode.ACCOUNT_ACTIVATION_NOT_FOUND);
+        super(
+                DomainErrorCode.ACCOUNT_ACTIVATION_NOT_FOUND,
+                "The account activation record could not be found.",
+                404
+        );
     }
 }

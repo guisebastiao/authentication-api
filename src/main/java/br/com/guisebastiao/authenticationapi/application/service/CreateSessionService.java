@@ -5,6 +5,7 @@ import br.com.guisebastiao.authenticationapi.application.port.out.IpGeolocationP
 import br.com.guisebastiao.authenticationapi.application.port.out.SecureHasherPort;
 import br.com.guisebastiao.authenticationapi.application.port.out.SecureRandomGeneratorPort;
 import br.com.guisebastiao.authenticationapi.application.port.out.SessionRepositoryPort;
+import br.com.guisebastiao.authenticationapi.application.result.CreateSessionResult;
 import br.com.guisebastiao.authenticationapi.application.result.IpLocationResult;
 import br.com.guisebastiao.authenticationapi.domain.enums.DeviceType;
 import br.com.guisebastiao.authenticationapi.domain.model.Account;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,11 +66,13 @@ public class CreateSessionService implements CreateSessionUseCase {
     }
 
     private String createLocation(String ipAddress) {
-        IpLocationResult location = ipGeolocation.findLocation(ipAddress);
+        Optional<IpLocationResult> findLocation = ipGeolocation.findLocation(ipAddress);
 
-        if (location == null) {
+        if (findLocation.isEmpty()) {
             return "Localização desconhecida";
         }
+
+        IpLocationResult location = findLocation.get();
 
         return Stream.of(location.city(), location.country())
                 .filter(value -> value != null && !value.isBlank())

@@ -4,6 +4,10 @@ import br.com.guisebastiao.authenticationapi.domain.enums.DomainErrorCode;
 
 public class AccountActivationResendNotAvailableException extends DomainException {
     public AccountActivationResendNotAvailableException() {
-        super(DomainErrorCode.ACCOUNT_ACTIVATION_RESEND_NOT_AVAILABLE);
+        super(
+                DomainErrorCode.RESEND_NOT_AVAILABLE,
+                "Account activation email resend is not currently available.",
+                429
+        );
     }
 }

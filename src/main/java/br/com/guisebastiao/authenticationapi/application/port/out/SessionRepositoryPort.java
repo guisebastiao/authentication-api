@@ -1,5 +1,7 @@
 package br.com.guisebastiao.authenticationapi.application.port.out;
 
+import br.com.guisebastiao.authenticationapi.application.result.PageResult;
+import br.com.guisebastiao.authenticationapi.application.command.PageQueryCommand;
 import br.com.guisebastiao.authenticationapi.domain.model.Session;
 
 import java.util.List;
@@ -13,9 +15,11 @@ public interface SessionRepositoryPort {
 
     Optional<Session> findBySessionTokenHash(String sessionTokenHash);
 
-    List<Session> findAllByUserIdAndNotRevoked(UUID userId);
+    PageResult<Session> findAllByAccountIdAndNotRevoked(UUID accountId, PageQueryCommand pagination);
 
-    Optional<Session> findByUserIdAndSessionTokenHash(UUID userId, String sessionTokenHash);
+    List<Session> findAllByAccountIdAndNotRevoked(UUID accountId);
 
-    List<Session> findAllByUserIdAndSessionIdsAndNotRevoked(UUID userId, List<UUID> sessionIds);
+    Optional<Session> findByAccountIdAndSessionTokenHash(UUID userId, String sessionTokenHash);
+
+    List<Session> findAllByAccountIdAndSessionIdsAndNotRevoked(UUID accountId, List<UUID> sessionIds);
 }

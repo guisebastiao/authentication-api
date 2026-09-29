@@ -3,17 +3,16 @@ package br.com.guisebastiao.authenticationapi.application.service;
 import br.com.guisebastiao.authenticationapi.application.port.in.ResendRecoverPasswordEmailUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.in.SendRecoverPasswordEmailUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.PasswordEncoderPort;
-import br.com.guisebastiao.authenticationapi.application.port.out.RateLimiterPort;
 import br.com.guisebastiao.authenticationapi.application.port.out.RecoverPasswordRepositoryPort;
-import br.com.guisebastiao.authenticationapi.application.ratelimit.RateLimitKey;
-import br.com.guisebastiao.authenticationapi.application.ratelimit.RateLimitPolicy;
-import br.com.guisebastiao.authenticationapi.application.result.RateLimitResult;
+import br.com.guisebastiao.authenticationapi.application.port.out.SecureHasherPort;
+import br.com.guisebastiao.authenticationapi.application.result.RecoverPasswordResult;
 import br.com.guisebastiao.authenticationapi.domain.exception.*;
 import br.com.guisebastiao.authenticationapi.domain.model.RecoverPassword;
 
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 public class ResendRecoverPasswordEmailService implements ResendRecoverPasswordEmailUseCase {
     private static final int RESEND_EMAIL_AVAILABLE_MINUTES = 1;
@@ -21,57 +20,57 @@ public class ResendRecoverPasswordEmailService implements ResendRecoverPasswordE
     private final SendRecoverPasswordEmailUseCase sendRecoverPasswordEmailUseCase;
     private final RecoverPasswordRepositoryPort recoverPasswordRepository;
     private final PasswordEncoderPort passwordEncoder;
-    private final RateLimiterPort rateLimiter;
+    private final SecureHasherPort secureHasher;
     private final SecureRandom secureRandom;
 
     public ResendRecoverPasswordEmailService(
             SendRecoverPasswordEmailUseCase sendRecoverPasswordEmailUseCase,
             RecoverPasswordRepositoryPort recoverPasswordRepository,
             PasswordEncoderPort passwordEncoder,
-            RateLimiterPort rateLimiter,
+            SecureHasherPort secureHasher,
             SecureRandom secureRandom
     ) {
         this.sendRecoverPasswordEmailUseCase = sendRecoverPasswordEmailUseCase;
         this.recoverPasswordRepository = recoverPasswordRepository;
         this.passwordEncoder = passwordEncoder;
+        this.secureHasher = secureHasher;
         this.secureRandom = secureRandom;
-        this.rateLimiter = rateLimiter;
     }
 
     @Override
-    public void execute(String email, String ipAddress) {
-        RateLimitResult rateLimit = rateLimiter.consume(
-                RateLimitPolicy.RECOVER_PASSWORD_RESEND,
-                RateLimitKey.ip(ipAddress)
-        );
+    public RecoverPasswordResult execute(String recoverToken) {
+        String recoverTokenHash = secureHasher.hash(recoverToken);
 
-        if (!rateLimit.allowed()) {
-            throw new RateLimitExceededException(rateLimit.retryAfterSeconds());
-        }
-
-        RecoverPassword recoverPasswordExists = recoverPasswordRepository.findActiveByAccountEmail(email)
+        RecoverPassword recoverPassword = recoverPasswordRepository
+                .findByRecoverTokenHashAndNotVerified(recoverTokenHash)
                 .orElseThrow(RecoverPasswordNotFoundException::new);
 
-        validateRecoverPassword(recoverPasswordExists);
+        validateRecoverPassword(recoverPassword);
 
         String otpCode = String.format("%06d", secureRandom.nextInt(1_000_000));
         String otpCodeHash = passwordEncoder.hash(otpCode);
 
         Instant resendAvailableAt = Instant.now().plus(RESEND_EMAIL_AVAILABLE_MINUTES, ChronoUnit.MINUTES);
 
-        recoverPasswordExists.setResendAvailableAt(resendAvailableAt);
-        recoverPasswordExists.setOtpCodeHash(otpCodeHash);
+        recoverPassword.setResendAvailableAt(resendAvailableAt);
+        recoverPassword.setOtpCodeHash(otpCodeHash);
 
-        RecoverPassword recoverPassword = recoverPasswordRepository.save(recoverPasswordExists);
+        RecoverPassword saved = recoverPasswordRepository.save(recoverPassword);
 
         sendRecoverPasswordEmailUseCase.execute(
-                recoverPassword.getAccount().getEmail(),
+                saved.getAccount().getEmail(),
                 otpCode,
-                recoverPassword.getExpiresAt()
+                saved.getExpiresAt()
         );
+
+        return new RecoverPasswordResult(recoverToken, resendAvailableAt, saved.getExpiresAt());
     }
 
     private void validateRecoverPassword(RecoverPassword recoverPassword) {
+        if (recoverPassword.getVerifiedAt() != null) {
+            throw new RecoverPasswordAlreadyVerifiedException();
+        }
+
         if (!recoverPassword.getExpiresAt().isAfter(Instant.now())) {
             throw new RecoverPasswordExpiredException();
         }

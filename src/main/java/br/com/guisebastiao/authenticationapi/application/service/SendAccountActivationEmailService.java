@@ -1,9 +1,12 @@
 package br.com.guisebastiao.authenticationapi.application.service;
 
+import br.com.guisebastiao.authenticationapi.adapter.out.smtp.EmailSendPaylod;
 import br.com.guisebastiao.authenticationapi.application.port.in.SendAccountActivationEmailUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.*;
 
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class SendAccountActivationEmailService implements SendAccountActivationEmailUseCase {
@@ -21,10 +24,9 @@ public class SendAccountActivationEmailService implements SendAccountActivationE
 
         Map<String, Object> variables = Map.of(
                 "email", email,
-                "otpCode", otpCode,
-                "expiresAt", expiresAt
+                "otpCode", otpCode
         );
 
-        emailSender.send(TEMPLATE, email, subject, variables);
+        emailSender.send(new EmailSendPaylod(TEMPLATE, email, subject, variables));
     }
 }

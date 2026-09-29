@@ -1,7 +1,7 @@
 package br.com.guisebastiao.authenticationapi.application.port.in;
 
-import br.com.guisebastiao.authenticationapi.application.command.AccountActivateCommand;
+import br.com.guisebastiao.authenticationapi.application.command.AccountActivationCommand;
 
 public interface AccountActivateUseCase {
-    void execute(AccountActivateCommand command, String ipAddress);
+    void execute(AccountActivationCommand command);
 }

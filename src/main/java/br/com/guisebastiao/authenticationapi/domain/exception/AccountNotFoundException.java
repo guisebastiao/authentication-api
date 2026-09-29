@@ -4,6 +4,10 @@ import br.com.guisebastiao.authenticationapi.domain.enums.DomainErrorCode;
 
 public class AccountNotFoundException extends DomainException {
     public AccountNotFoundException() {
-        super(DomainErrorCode.ACCOUNT_NOT_FOUND);
+        super(
+                DomainErrorCode.ACCOUNT_NOT_FOUND,
+                "The account could not be found.",
+                404
+        );
     }
 }

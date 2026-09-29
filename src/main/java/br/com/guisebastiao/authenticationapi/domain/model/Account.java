@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class Account {
     private UUID id;
-    private Set<AccountRole> roles;
+    private Set<Role> roles;
     private String email;
     private String passwordHash;
     private AccountStatus status;
@@ -20,7 +20,7 @@ public class Account {
 
     public Account(
             UUID id,
-            Set<AccountRole> roles,
+            Set<Role> roles,
             String email,
             String passwordHash,
             AccountStatus status,
@@ -46,11 +46,11 @@ public class Account {
         this.id = id;
     }
 
-    public Set<AccountRole> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<AccountRole> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

@@ -4,13 +4,12 @@ import br.com.guisebastiao.authenticationapi.application.command.RefreshTokenCom
 import br.com.guisebastiao.authenticationapi.application.port.in.CreateRefreshUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.in.RefreshTokenUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.in.ValidateSessionUseCase;
-import br.com.guisebastiao.authenticationapi.application.port.out.JwtTokenPort;
-import br.com.guisebastiao.authenticationapi.application.port.out.RefreshRepositoryPort;
-import br.com.guisebastiao.authenticationapi.application.port.out.SecureHasherPort;
-import br.com.guisebastiao.authenticationapi.application.port.out.SessionRepositoryPort;
+import br.com.guisebastiao.authenticationapi.application.port.out.*;
 import br.com.guisebastiao.authenticationapi.application.result.AuthResult;
+import br.com.guisebastiao.authenticationapi.application.result.CreateRefreshResult;
+import br.com.guisebastiao.authenticationapi.application.result.JwtValidationResult;
+import br.com.guisebastiao.authenticationapi.domain.enums.JwtValidationStatus;
 import br.com.guisebastiao.authenticationapi.domain.exception.*;
-import br.com.guisebastiao.authenticationapi.domain.model.Account;
 import br.com.guisebastiao.authenticationapi.domain.model.Refresh;
 import br.com.guisebastiao.authenticationapi.domain.model.Session;
 
@@ -44,28 +43,31 @@ public class RefreshTokenService implements RefreshTokenUseCase {
     }
 
     @Override
-    public AuthResult execute(Account account, RefreshTokenCommand command) {
-        Session session = validateSessionUseCase.execute(account, command.sessionToken());
+    public AuthResult execute(RefreshTokenCommand command) {
+        Session session = validateSessionUseCase.execute(command.sessionToken());
 
-        JwtTokenPort.JwtValidationStatus status = jwtToken.validate(
+        JwtValidationResult jwtResult = jwtToken.validate(
                 command.accessToken(),
-                command.refreshToken(),
                 command.sessionToken()
         );
 
-        boolean jwtIsExpired = validateJwtStatus(status);
+        boolean jwtIsExpired = validateJwtStatus(jwtResult.status());
 
         if (!jwtIsExpired) {
             return new AuthResult(command.accessToken(), command.refreshToken(), command.sessionToken());
         }
 
-        Refresh previousRefresh  = consumeAndValidateRefresh(command.refreshToken(), session);
+        Refresh previousRefresh = consumeAndValidateRefresh(command.refreshToken(), session);
 
-        CreateRefreshUseCase.CreateRefreshResult refreshResult = createRefreshUseCase.execute(session, previousRefresh);
+        CreateRefreshResult refreshResult = createRefreshUseCase.execute(session);
+
+        previousRefresh.setReplacedBy(refreshResult.refresh());
+
+        refreshRepository.save(previousRefresh);
 
         updateSession(session);
 
-        String accessToken = jwtToken.generate(account, refreshResult.refreshToken(), command.sessionToken());
+        String accessToken = jwtToken.generate(session.getAccount(), command.sessionToken());
 
         return new AuthResult(accessToken, refreshResult.refreshToken(), command.sessionToken());
     }
@@ -80,17 +82,17 @@ public class RefreshTokenService implements RefreshTokenUseCase {
         sessionRepository.save(session);
     }
 
-    private boolean validateJwtStatus(JwtTokenPort.JwtValidationStatus status) {
-        Set<JwtTokenPort.JwtValidationStatus> allowedStatuses = EnumSet.of(
-                JwtTokenPort.JwtValidationStatus.VALID,
-                JwtTokenPort.JwtValidationStatus.EXPIRED
+    private boolean validateJwtStatus(JwtValidationStatus status) {
+        Set<JwtValidationStatus> allowedStatuses = EnumSet.of(
+                JwtValidationStatus.VALID,
+                JwtValidationStatus.EXPIRED
         );
 
         if (!allowedStatuses.contains(status)) {
             throw new UnauthorizedException();
         }
 
-        return status == JwtTokenPort.JwtValidationStatus.EXPIRED;
+        return status == JwtValidationStatus.EXPIRED;
     }
 
     private Refresh consumeAndValidateRefresh(String refreshToken, Session session) {
@@ -109,6 +111,6 @@ public class RefreshTokenService implements RefreshTokenUseCase {
 
         refresh.setRevokedAt(Instant.now());
 
-        return refreshRepository.save(refresh);
+        return refresh;
     }
 }

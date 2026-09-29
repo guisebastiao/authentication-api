@@ -4,6 +4,10 @@ import br.com.guisebastiao.authenticationapi.domain.enums.DomainErrorCode;
 
 public class SessionNotFoundException extends DomainException {
     public SessionNotFoundException() {
-        super(DomainErrorCode.SESSION_NOT_FOUND);
+        super(
+                DomainErrorCode.SESSION_NOT_FOUND,
+                "The session could not be found.",
+                404
+        );
     }
 }

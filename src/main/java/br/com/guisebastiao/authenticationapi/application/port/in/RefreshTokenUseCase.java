@@ -5,5 +5,5 @@ import br.com.guisebastiao.authenticationapi.application.result.AuthResult;
 import br.com.guisebastiao.authenticationapi.domain.model.Account;
 
 public interface RefreshTokenUseCase {
-    AuthResult execute(Account account, RefreshTokenCommand command);
+    AuthResult execute(RefreshTokenCommand command);
 }

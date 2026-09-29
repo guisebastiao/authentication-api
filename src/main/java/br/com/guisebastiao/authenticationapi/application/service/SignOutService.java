@@ -1,6 +1,5 @@
 package br.com.guisebastiao.authenticationapi.application.service;
 
-import br.com.guisebastiao.authenticationapi.application.command.SignOutCommand;
 import br.com.guisebastiao.authenticationapi.application.port.in.SignOutUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.RefreshRepositoryPort;
 import br.com.guisebastiao.authenticationapi.application.port.out.SecureHasherPort;
@@ -31,11 +30,6 @@ public class SignOutService implements SignOutUseCase {
     }
 
     @Override
-    public void execute(Account account, SignOutCommand command) {
-        consumeSignOut(account, command.sessionToken());
-    }
-
-    @Override
     public void execute(Account account, String sessionToken) {
         consumeSignOut(account, sessionToken);
     }
@@ -43,7 +37,7 @@ public class SignOutService implements SignOutUseCase {
     private void consumeSignOut(Account account, String sessionToken) {
         String sessionTokenHash = secureHasher.hash(sessionToken);
 
-        Session session = sessionRepository.findByUserIdAndSessionTokenHash(account.getId(), sessionTokenHash)
+        Session session = sessionRepository.findByAccountIdAndSessionTokenHash(account.getId(), sessionTokenHash)
                 .orElseThrow(SessionNotFoundException::new);
 
         validateSession(session);

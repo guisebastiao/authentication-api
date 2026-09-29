@@ -3,7 +3,6 @@ package br.com.guisebastiao.authenticationapi.application.service;
 import br.com.guisebastiao.authenticationapi.application.port.in.ValidateSessionUseCase;
 import br.com.guisebastiao.authenticationapi.application.port.out.*;
 import br.com.guisebastiao.authenticationapi.domain.exception.*;
-import br.com.guisebastiao.authenticationapi.domain.model.Account;
 import br.com.guisebastiao.authenticationapi.domain.model.Session;
 
 import java.time.Instant;
@@ -21,15 +20,11 @@ public class ValidateSessionService implements ValidateSessionUseCase {
     }
 
     @Override
-    public Session execute(Account account, String sessionToken) {
+    public Session execute(String sessionToken) {
         String sessionTokenHash = secureHasher.hash(sessionToken);
 
         Session session = sessionRepository.findBySessionTokenHash(sessionTokenHash)
                 .orElseThrow(SessionNotFoundException::new);
-
-        if (!session.getAccount().getId().equals(account.getId())) {
-            throw new SessionNotBelongToAccountException();
-        }
 
         if (session.getRevokedAt() != null) {
             throw new SessionRevokedException();

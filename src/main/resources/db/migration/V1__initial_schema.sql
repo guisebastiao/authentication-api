@@ -1,0 +1,149 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+SET TIME ZONE 'UTC';
+
+CREATE TYPE account_status AS ENUM (
+    'PENDING',
+    'ACTIVATED',
+    'DISABLED'
+);
+
+CREATE TYPE device_type AS ENUM (
+    'MOBILE',
+    'TABLET',
+    'DESKTOP',
+    'OTHER'
+);
+
+CREATE TABLE accounts (
+    id            UUID         NOT NULL DEFAULT gen_random_uuid(),
+    email         VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    status        account_status NOT NULL DEFAULT 'PENDING',
+    disabled_at   TIMESTAMPTZ,
+    created_at    TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
+    updated_at    TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT pk_accounts PRIMARY KEY (id),
+    CONSTRAINT uq_accounts_email UNIQUE (email)
+);
+
+CREATE INDEX idx_accounts_status ON accounts (status);
+CREATE INDEX idx_accounts_created_at ON accounts (created_at);
+CREATE INDEX idx_accounts_disabled_at ON accounts (disabled_at);
+
+CREATE TABLE account_activations (
+    id                    UUID         NOT NULL DEFAULT gen_random_uuid(),
+    account_id            UUID         NOT NULL,
+    activation_token_hash VARCHAR(255) NOT NULL,
+    otp_code_hash         VARCHAR(255) NOT NULL,
+    expires_at            TIMESTAMPTZ  NOT NULL,
+    resend_available_at   TIMESTAMPTZ  NOT NULL,
+    activated_at          TIMESTAMPTZ,
+    created_at            TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at            TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT pk_account_activations PRIMARY KEY (id),
+    CONSTRAINT uq_account_activations_activation_token_hash UNIQUE (activation_token_hash),
+    CONSTRAINT fk_account_activations_account_id FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_account_activations_expires_at ON account_activations (expires_at);
+CREATE INDEX idx_account_activations_activated_at ON account_activations (activated_at);
+CREATE INDEX idx_account_activations_account_id ON account_activations (account_id);
+
+CREATE TABLE roles (
+    id          UUID        NOT NULL DEFAULT gen_random_uuid(),
+    name        VARCHAR(50) NOT NULL,
+    description TEXT,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT pk_roles PRIMARY KEY (id),
+    CONSTRAINT uq_roles_name UNIQUE (name)
+);
+
+CREATE TABLE account_roles (
+    account_id UUID NOT NULL,
+    role_id UUID NOT NULL,
+
+    CONSTRAINT pk_account_roles PRIMARY KEY (account_id, role_id),
+    CONSTRAINT fk_account_roles_account_id FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE CASCADE,
+    CONSTRAINT fk_account_roles_role_id FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_account_roles_role_id ON account_roles (role_id);
+
+CREATE TABLE sessions (
+    id                 UUID         NOT NULL DEFAULT gen_random_uuid(),
+    account_id         UUID         NOT NULL,
+    session_token_hash VARCHAR(255) NOT NULL,
+    type               device_type  NOT NULL,
+    user_agent         TEXT         NOT NULL,
+    ip_address         VARCHAR(45)  NOT NULL,
+    location           VARCHAR(255),
+    revoked_at         TIMESTAMPTZ,
+    last_seen_at       TIMESTAMPTZ  NOT NULL,
+    expires_at         TIMESTAMPTZ  NOT NULL,
+    created_at         TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at         TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT pk_sessions PRIMARY KEY (id),
+    CONSTRAINT uq_sessions_session_token_hash UNIQUE (session_token_hash),
+    CONSTRAINT fk_sessions_account_id FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_sessions_type ON sessions (type);
+CREATE INDEX idx_sessions_created_at ON sessions (created_at);
+CREATE INDEX idx_sessions_revoked_at ON sessions (revoked_at) WHERE revoked_at IS NULL;
+CREATE INDEX idx_sessions_account_id ON sessions (account_id);
+CREATE INDEX idx_sessions_expires_at ON sessions (expires_at);
+
+CREATE TABLE refreshes (
+    id                 UUID         NOT NULL DEFAULT gen_random_uuid(),
+    session_id         UUID         NOT NULL,
+    replaced_by        UUID,
+    refresh_token_hash VARCHAR(255) NOT NULL,
+    revoked_at         TIMESTAMPTZ,
+    created_at         TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at         TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT pk_refreshes PRIMARY KEY (id),
+    CONSTRAINT uq_refreshes_refresh_token_hash UNIQUE (refresh_token_hash),
+    CONSTRAINT fk_refreshes_session_id FOREIGN KEY (session_id) REFERENCES sessions (id) ON DELETE CASCADE,
+    CONSTRAINT fk_refreshes_replaced_by FOREIGN KEY (replaced_by) REFERENCES refreshes (id) ON DELETE SET NULL
+);
+
+CREATE INDEX idx_refreshes_created_at ON refreshes (created_at);
+CREATE INDEX idx_refreshes_revoked_at ON refreshes (revoked_at) WHERE revoked_at IS NULL;
+CREATE INDEX idx_refreshes_session_id ON refreshes (session_id);
+CREATE INDEX idx_refreshes_replaced_by ON refreshes (replaced_by);
+
+CREATE TABLE recover_passwords (
+    id                  UUID         NOT NULL DEFAULT gen_random_uuid(),
+    account_id          UUID         NOT NULL,
+    recover_token_hash  VARCHAR(255),
+    opt_code_hash       VARCHAR(255) NOT NULL,
+    expires_at          TIMESTAMPTZ  NOT NULL,
+    used_at             TIMESTAMPTZ,
+    resend_available_at TIMESTAMPTZ  NOT NULL,
+    verified_at         TIMESTAMPTZ,
+    created_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT pk_recover_passwords PRIMARY KEY (id),
+    CONSTRAINT uq_recover_passwords_recover_token_hash UNIQUE (recover_token_hash),
+    CONSTRAINT fk_recover_passwords_account_id FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_recover_passwords_used_at ON recover_passwords (used_at) WHERE used_at IS NULL;
+CREATE INDEX idx_recover_passwords_expires_at ON recover_passwords (expires_at);
+CREATE INDEX idx_recover_passwords_created_at ON recover_passwords (created_at);
+CREATE INDEX idx_recover_passwords_verified_at ON recover_passwords (verified_at) WHERE verified_at IS NULL;
+CREATE INDEX idx_recover_passwords_account_id ON recover_passwords (account_id);
+
+INSERT INTO roles (id, name)
+VALUES
+    (gen_random_uuid(), 'ROLE_ADMIN'),
+    (gen_random_uuid(), 'ROLE_USER')
+ON CONFLICT (name) DO NOTHING;

@@ -25,7 +25,7 @@ public class SessionSignOutService implements SessionSignOutUseCase {
 
     @Override
     public void execute(Account account, List<UUID> sessionsIds) {
-        List<Session> sessions = sessionRepository.findAllByUserIdAndSessionIdsAndNotRevoked(
+        List<Session> sessions = sessionRepository.findAllByAccountIdAndSessionIdsAndNotRevoked(
                 account.getId(),
                 sessionsIds
         );

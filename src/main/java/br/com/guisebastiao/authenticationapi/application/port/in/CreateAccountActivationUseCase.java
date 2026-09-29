@@ -4,5 +4,5 @@ import br.com.guisebastiao.authenticationapi.application.result.AccountActivatio
 import br.com.guisebastiao.authenticationapi.domain.model.Account;
 
 public interface CreateAccountActivationUseCase {
-    AccountActivationResult execute(Account account, String ipAddress);
+    AccountActivationResult execute(Account account);
 }

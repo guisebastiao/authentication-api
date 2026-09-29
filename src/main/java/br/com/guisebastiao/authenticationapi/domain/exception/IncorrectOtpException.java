@@ -4,6 +4,10 @@ import br.com.guisebastiao.authenticationapi.domain.enums.DomainErrorCode;
 
 public class IncorrectOtpException extends DomainException {
     public IncorrectOtpException() {
-        super(DomainErrorCode.INCORRECT_OTP);
+        super(
+                DomainErrorCode.INCORRECT_OTP,
+                "The provided one-time password is incorrect.",
+                401
+        );
     }
 }
