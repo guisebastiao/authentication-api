@@ -10,7 +10,7 @@ public record PaginationRequest(
         Integer page,
 
         @Min(value = 1, message = INVALID_MIN_NUMBER)
-        @Max(value = 100, message = INVALID_MAX_NUMBER)
+        @Max(value = 50, message = INVALID_MAX_NUMBER)
         Integer size
 ) {
     public PaginationRequest {

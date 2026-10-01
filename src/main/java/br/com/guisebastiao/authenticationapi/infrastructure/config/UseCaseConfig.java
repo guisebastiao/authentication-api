@@ -40,6 +40,39 @@ public class UseCaseConfig {
     }
 
     @Bean
+    public CleanupAccountActivationService cleanupAccountActivationService(
+            AccountActivationRepositoryPort accountActivationRepository,
+            LoggerPort logger
+    ) {
+        return new CleanupAccountActivationService(
+                accountActivationRepository,
+                logger
+        );
+    }
+
+    @Bean
+    public CleanupRecoverPasswordService cleanupRecoverPasswordService(
+            RecoverPasswordRepositoryPort recoverPasswordRepository,
+            LoggerPort logger
+    ) {
+        return new CleanupRecoverPasswordService(
+                recoverPasswordRepository,
+                logger
+        );
+    }
+
+    @Bean
+    public CleanupSessionService cleanupSessionService(
+            SessionRepositoryPort sessionRepository,
+            LoggerPort logger
+    ) {
+        return new CleanupSessionService(
+                sessionRepository,
+                logger
+        );
+    }
+
+    @Bean
     public CreateAccountActivationService createAccountActivationService(
             SendAccountActivationEmailUseCase sendAccountActivationEmail,
             AccountActivationRepositoryPort accountActivationRepository,

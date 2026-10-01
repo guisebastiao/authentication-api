@@ -50,8 +50,8 @@ public class GetSessionsService implements GetSessionsUseCase {
                 content,
                 sessions.totalItems(),
                 sessions.totalPages(),
-                sessions.page(),
-                sessions.size()
+                paging.page(),
+                paging.size()
         );
     }
 }

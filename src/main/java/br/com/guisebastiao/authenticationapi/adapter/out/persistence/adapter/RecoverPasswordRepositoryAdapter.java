@@ -8,8 +8,8 @@ import br.com.guisebastiao.authenticationapi.domain.model.RecoverPassword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -32,5 +32,10 @@ public class RecoverPasswordRepositoryAdapter implements RecoverPasswordReposito
     @Override
     public Optional<RecoverPassword> findByRecoverTokenHashAndNotVerified(String recoverTokenHash) {
         return repository.findByRecoverTokenHashAndNotVerified(recoverTokenHash).map(mapper::toDomain);
+    }
+
+    @Override
+    public int deleteAllExpired(Instant now) {
+        return repository.deleteAllExpired(now);
     }
 }

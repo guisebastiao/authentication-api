@@ -1,13 +1,16 @@
-package br.com.guisebastiao.authenticationapi.adapter.in.exceptions;
+package br.com.guisebastiao.authenticationapi.adapter.in.exception;
 
 import br.com.guisebastiao.authenticationapi.adapter.in.dto.common.ApiBodyError;
 import br.com.guisebastiao.authenticationapi.adapter.in.dto.common.ApiFieldError;
-import br.com.guisebastiao.authenticationapi.adapter.out.logger.LoggerPayload;
+import br.com.guisebastiao.authenticationapi.adapter.out.logger.ErrorLoggerPayload;
+import br.com.guisebastiao.authenticationapi.domain.exception.RateLimitExceededException;
+import br.com.guisebastiao.authenticationapi.adapter.out.logger.WarnLoggerPayload;
 import br.com.guisebastiao.authenticationapi.adapter.out.security.SecurityAccount;
 import br.com.guisebastiao.authenticationapi.application.port.out.LoggerPort;
 import br.com.guisebastiao.authenticationapi.domain.enums.DomainErrorCode;
 import br.com.guisebastiao.authenticationapi.domain.exception.DomainException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,15 +48,15 @@ public class GlobalExceptionHandler {
 
         String user = securityAccount != null ? securityAccount.account().getEmail() : null;
 
-        LoggerPayload payload = new LoggerPayload(
+        WarnLoggerPayload payload = new WarnLoggerPayload(
                 Instant.now(),
-                exception.getMessage(),
+                "Request validation failed due to invalid field values",
                 request.getMethod(),
                 request.getRequestURI(),
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 request.getRemoteAddr(),
                 DomainErrorCode.VALIDATION_ERROR,
-                exception.getStackTrace(),
+                exception,
                 user,
                 sessionToken
         );
@@ -68,6 +71,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ApiBodyError<Object>> handleDomainException(
             HttpServletRequest request,
+            HttpServletResponse response,
             DomainException exception,
             @AuthenticationPrincipal SecurityAccount securityAccount
     ) {
@@ -75,7 +79,7 @@ public class GlobalExceptionHandler {
 
         String user = securityAccount != null ? securityAccount.account().getEmail() : null;
 
-        LoggerPayload payload = new LoggerPayload(
+        WarnLoggerPayload payload = new WarnLoggerPayload(
                 Instant.now(),
                 exception.getMessage(),
                 request.getMethod(),
@@ -83,7 +87,7 @@ public class GlobalExceptionHandler {
                 exception.getValue(),
                 request.getRemoteAddr(),
                 exception.getCode(),
-                exception.getStackTrace(),
+                exception,
                 user,
                 sessionToken
         );
@@ -91,6 +95,10 @@ public class GlobalExceptionHandler {
         logger.warn(payload);
 
         ApiBodyError<Object> data = ApiBodyError.of(exception.getCode(), exception.getDetails());
+
+        if (exception instanceof RateLimitExceededException rateLimitException) {
+            response.setHeader("Retry-After", String.valueOf(rateLimitException.getRetryAfterSeconds()));
+        }
 
         return ResponseEntity.status(exception.getValue()).body(data);
     }
@@ -105,7 +113,7 @@ public class GlobalExceptionHandler {
 
         String user = securityAccount != null ? securityAccount.account().getEmail() : null;
 
-        LoggerPayload payload = new LoggerPayload(
+        WarnLoggerPayload payload = new WarnLoggerPayload(
                 Instant.now(),
                 exception.getMessage(),
                 request.getMethod(),
@@ -113,7 +121,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.METHOD_NOT_ALLOWED.value(),
                 request.getRemoteAddr(),
                 DomainErrorCode.METHOD_NOT_ALLOWED,
-                exception.getStackTrace(),
+                exception,
                 user,
                 sessionToken
         );
@@ -135,7 +143,7 @@ public class GlobalExceptionHandler {
 
         String user = securityAccount != null ? securityAccount.account().getEmail() : null;
 
-        LoggerPayload payload = new LoggerPayload(
+        WarnLoggerPayload payload = new WarnLoggerPayload(
                 Instant.now(),
                 exception.getMessage(),
                 request.getMethod(),
@@ -143,7 +151,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value(),
                 request.getRemoteAddr(),
                 DomainErrorCode.ROUTE_NOT_FOUND,
-                exception.getStackTrace(),
+                exception,
                 user,
                 sessionToken
         );
@@ -165,7 +173,7 @@ public class GlobalExceptionHandler {
 
         String user = securityAccount != null ? securityAccount.account().getEmail() : null;
 
-        LoggerPayload payload = new LoggerPayload(
+        ErrorLoggerPayload payload = new ErrorLoggerPayload(
                 Instant.now(),
                 exception.getMessage(),
                 request.getMethod(),
@@ -173,12 +181,12 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 request.getRemoteAddr(),
                 DomainErrorCode.INTERNAL_SERVER_ERROR,
-                exception.getStackTrace(),
+                exception,
                 user,
                 sessionToken
         );
 
-        logger.warn(payload);
+        logger.error(payload);
 
         ApiBodyError<Void> data = ApiBodyError.of(DomainErrorCode.INTERNAL_SERVER_ERROR, null);
 

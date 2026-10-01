@@ -52,6 +52,33 @@ public class TransactionConfiguration {
 
     @Bean
     @Primary
+    public CleanupAccountActivationUseCase transactionalCleanupAccountActivationUseCase(
+            CleanupAccountActivationService delegate,
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
+    ) {
+        return transactional(CleanupAccountActivationUseCase.class, delegate, transactionTemplate);
+    }
+
+    @Bean
+    @Primary
+    public CleanupRecoverPasswordsUseCase transactionalCleanupRecoverPasswordsUseCase(
+            CleanupRecoverPasswordService delegate,
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
+    ) {
+        return transactional(CleanupRecoverPasswordsUseCase.class, delegate, transactionTemplate);
+    }
+
+    @Bean
+    @Primary
+    public CleanupSessionUseCase transactionalCleanupSessionUseCase(
+            CleanupSessionService delegate,
+            @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate
+    ) {
+        return transactional(CleanupSessionUseCase.class, delegate, transactionTemplate);
+    }
+
+    @Bean
+    @Primary
     public CreateAccountActivationUseCase transactionalCreateAccountActivationUseCase(
             CreateAccountActivationService delegate,
             @Qualifier("transactionTemplate") TransactionTemplate transactionTemplate

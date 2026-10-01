@@ -8,6 +8,7 @@ import br.com.guisebastiao.authenticationapi.domain.model.AccountActivation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,9 +41,7 @@ public class AccountActivationRepositoryAdapter implements AccountActivationRepo
     }
 
     @Override
-    public List<AccountActivation> findAllByAccountIdAndNotExpired(UUID accountId) {
-        return repository.findAllByAccountIdAndNotExpired(accountId).stream()
-                .map(mapper::toDomain)
-                .toList();
+    public int deleteAllExpired(Instant now) {
+        return repository.deleteAllExpired(now);
     }
 }

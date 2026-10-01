@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,5 +88,10 @@ public class SessionRepositoryAdapter implements SessionRepositoryPort {
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public int deleteAllRevoked(Instant now) {
+        return repository.deleteAllRevokedOrExpired(now);
     }
 }

@@ -1,6 +1,7 @@
 package br.com.guisebastiao.authenticationapi.infrastructure.config;
 
 import br.com.guisebastiao.authenticationapi.adapter.in.security.SecurityFilter;
+import br.com.guisebastiao.authenticationapi.adapter.in.security.RateLimitFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.security.SecureRandom;
@@ -25,6 +27,7 @@ import java.security.SecureRandom;
 @AllArgsConstructor
 public class SecurityConfig {
     private final SecurityFilter securityFilter;
+    private final RateLimitFilter rateLimitFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
@@ -36,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(ApiRoutesConfig.PUBLIC).permitAll()
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(rateLimitFilter, SecurityContextHolderFilter.class)
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

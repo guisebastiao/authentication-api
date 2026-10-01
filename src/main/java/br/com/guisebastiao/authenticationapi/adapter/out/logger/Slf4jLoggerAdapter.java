@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Slf4jLoggerAdapter implements LoggerPort {
+
     private final Logger logger;
 
     public Slf4jLoggerAdapter(
@@ -17,15 +18,31 @@ public class Slf4jLoggerAdapter implements LoggerPort {
         this.logger = logger;
     }
 
+    @Override
+    public void info(LoggerPayload payload) {
+        switch (payload) {
+            case ScheduleLoggerPayload schedule ->
+                    logSchedule(schedule);
+
+            case InfoLoggerPayload info ->
+                    logInfo(info);
+
+            default -> throw new IllegalArgumentException(
+                    "Unsupported payload for info log: " + payload.getClass().getSimpleName()
+            );
+        }
+    }
 
     @Override
-    public void warn(LoggerPayload payload) {
-        logger.warn("""     
+    public void warn(WarnLoggerPayload payload) {
+        logger.warn(
+                """
                 ┌─ REQUEST WARNING ───────────────────────
                 │ Method: {}
                 │ Path: {}
                 │ Status: {}
                 │ IP: {}
+                │ Timestamp: {}
                 │ Error Code: {}
                 │ User: {}
                 │ Session: {}
@@ -37,6 +54,7 @@ public class Slf4jLoggerAdapter implements LoggerPort {
                 payload.path(),
                 payload.status(),
                 payload.ip(),
+                payload.timestamp(),
                 payload.errorCode(),
                 payload.userId(),
                 payload.sessionToken(),
@@ -46,7 +64,7 @@ public class Slf4jLoggerAdapter implements LoggerPort {
     }
 
     @Override
-    public void error(LoggerPayload payload) {
+    public void error(ErrorLoggerPayload payload) {
         logger.error(
                 """
                 ┌─ REQUEST ERROR ─────────────────────────
@@ -54,6 +72,7 @@ public class Slf4jLoggerAdapter implements LoggerPort {
                 │ Path: {}
                 │ Status: {}
                 │ IP: {}
+                │ Timestamp: {}
                 │ Error Code: {}
                 │ User: {}
                 │ Session: {}
@@ -65,6 +84,7 @@ public class Slf4jLoggerAdapter implements LoggerPort {
                 payload.path(),
                 payload.status(),
                 payload.ip(),
+                payload.timestamp(),
                 payload.errorCode(),
                 payload.userId(),
                 payload.sessionToken(),
@@ -72,4 +92,37 @@ public class Slf4jLoggerAdapter implements LoggerPort {
                 payload.exception()
         );
     }
+
+    private void logInfo(InfoLoggerPayload payload) {
+        logger.info(
+                """
+                ┌─ APPLICATION INFO ──────────────────────
+                │ Operation: {}
+                │ Timestamp: {}
+                │ User: {}
+                │ Message: {}
+                └─────────────────────────────────────────
+                """,
+                payload.operation(),
+                payload.timestamp(),
+                payload.userId(),
+                payload.message()
+        );
+    }
+
+    private void logSchedule(ScheduleLoggerPayload payload) {
+        logger.info(
+                """
+                ┌─ SCHEDULE ──────────────────────────────
+                │ Job: {}
+                │ Affected Items: {}
+                │ Message: {}
+                └─────────────────────────────────────────
+                """,
+                payload.job(),
+                payload.affectedItems(),
+                payload.message()
+        );
+    }
+
 }

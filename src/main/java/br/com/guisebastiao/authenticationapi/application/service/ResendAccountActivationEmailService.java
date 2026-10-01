@@ -9,6 +9,7 @@ import br.com.guisebastiao.authenticationapi.application.result.AccountActivatio
 import br.com.guisebastiao.authenticationapi.domain.exception.AccountActivationExpiredException;
 import br.com.guisebastiao.authenticationapi.domain.exception.AccountActivationNotFoundException;
 import br.com.guisebastiao.authenticationapi.domain.exception.AccountActivationResendNotAvailableException;
+import br.com.guisebastiao.authenticationapi.domain.exception.AccountAlreadyActivatedException;
 import br.com.guisebastiao.authenticationapi.domain.model.AccountActivation;
 
 import java.security.SecureRandom;
@@ -76,6 +77,10 @@ public class ResendAccountActivationEmailService implements ResendAccountActivat
     private void validateAccountActivation(AccountActivation accountActivation, Instant now) {
         if (!accountActivation.getExpiresAt().isAfter(now)) {
             throw new AccountActivationExpiredException();
+        }
+
+        if (accountActivation.getActivatedAt() != null) {
+            throw new AccountAlreadyActivatedException();
         }
 
         if (accountActivation.getResendAvailableAt().isAfter(now)) {
