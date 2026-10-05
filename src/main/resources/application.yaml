@@ -3,9 +3,9 @@ spring:
     name: authentication-api
 
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+    default: dev
 
-  Jackson:
+  jackson:
     time-zone: UTC
 
   datasource:
@@ -33,12 +33,6 @@ spring:
     port: ${MAIL_PORT}
     username: ${MAIL_USER}
     password: ${MAIL_PASS}
-    properties:
-      mail:
-        SMTP:
-          auth: false
-          STARTTLS:
-            enable: false
 
   rabbitmq:
     host: ${MQ_HOST}
@@ -64,83 +58,33 @@ app:
     client-id: ${GOOGLE_CLIENT_ID}
 
   scheduler:
-    account-activation-cleanup-rate: ${ACCOUNT_ACTIVATION_CLEANUP_RATE:10m}
-    recover-password-cleanup-rate: ${RECOVER_PASSWORD_CLEANUP_RATE:10m}
-    session-cleanup-rate: ${SESSION_CLEANUP_RATE:10m}
+    account-activation-cleanup-rate: ${ACCOUNT_ACTIVATION_CLEANUP_RATE}
+    recover-password-cleanup-rate: ${RECOVER_PASSWORD_CLEANUP_RATE}
+    session-cleanup-rate: ${SESSION_CLEANUP_RATE}
 
   rate-limit:
     global:
-      capacity: ${RATE_LIMIT_GLOBAL_CAPACITY:300}
-      refill-tokens: ${RATE_LIMIT_GLOBAL_REFILL_TOKENS:300}
-      duration: ${RATE_LIMIT_GLOBAL_DURATION:1m}
+      capacity: ${RATE_LIMIT_GLOBAL_CAPACITY}
+      refill-tokens: ${RATE_LIMIT_GLOBAL_REFILL_TOKENS}
+      duration: ${RATE_LIMIT_GLOBAL_DURATION}
+
     policies:
       - path: /auth/**
-        capacity: ${RATE_LIMIT_AUTH_CAPACITY:20}
-        refill-tokens: ${RATE_LIMIT_AUTH_REFILL_TOKENS:20}
-        refill-duration: ${RATE_LIMIT_AUTH_DURATION:1m}
+        capacity: ${RATE_LIMIT_AUTH_CAPACITY}
+        refill-tokens: ${RATE_LIMIT_AUTH_REFILL_TOKENS}
+        refill-duration: ${RATE_LIMIT_AUTH_DURATION}
+
       - path: /recover-password/**
-        capacity: ${RATE_LIMIT_RECOVER_PASSWORD_CAPACITY:5}
-        refill-tokens: ${RATE_LIMIT_RECOVER_PASSWORD_REFILL_TOKENS:5}
-        refill-duration: ${RATE_LIMIT_RECOVER_PASSWORD_DURATION:10m}
+        capacity: ${RATE_LIMIT_RECOVER_PASSWORD_CAPACITY}
+        refill-tokens: ${RATE_LIMIT_RECOVER_PASSWORD_REFILL_TOKENS}
+        refill-duration: ${RATE_LIMIT_RECOVER_PASSWORD_DURATION}
+
       - path: /activation-account/**
-        capacity: ${RATE_LIMIT_ACTIVATION_ACCOUNT_CAPACITY:5}
-        refill-tokens: ${RATE_LIMIT_ACTIVATION_ACCOUNT_REFILL_TOKENS:5}
-        refill-duration: ${RATE_LIMIT_ACTIVATION_ACCOUNT_DURATION:10m}
+        capacity: ${RATE_LIMIT_ACTIVATION_ACCOUNT_CAPACITY}
+        refill-tokens: ${RATE_LIMIT_ACTIVATION_ACCOUNT_REFILL_TOKENS}
+        refill-duration: ${RATE_LIMIT_ACTIVATION_ACCOUNT_DURATION}
 
   secrets:
     issuer: authentication-api
     access-token: ${ACCESS_TOKEN_SECRET}
     hmac: ${HMAC_SECRET}
-
-
-
-# ============
-# DEVELOPMENT
-# ============
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-
-  mail:
-    properties:
-      mail:
-        SMTP:
-          auth: false
-          STARTTLS:
-            enable: false
-
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: none
-
-  flyway:
-    clean-disabled: false
-
-# ============
-# PRODUCTION
-# ============
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-  mail:
-    properties:
-      mail:
-        SMTP:
-          auth: true
-          STARTTLS:
-            enable: true
-
-  jpa:
-    show-sql: false
-    hibernate:
-      ddl-auto: validate
-
-  flyway:
-    baseline-on-migrate: true
-    clean-disabled: true

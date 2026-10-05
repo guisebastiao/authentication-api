@@ -14,19 +14,16 @@ import java.time.Instant;
 
 public class ValidateRecoverPasswordService implements ValidateRecoverPasswordUseCase {
     private final RecoverPasswordRepositoryPort recoverPasswordRepository;
-    private final SecureRandomGeneratorPort secureRandomGenerator;
     private final PasswordEncoderPort passwordEncoder;
     private final SecureHasherPort secureHasher;
 
     public ValidateRecoverPasswordService(
             RecoverPasswordRepositoryPort recoverPasswordRepository,
-            SecureRandomGeneratorPort secureRandomGenerator,
             PasswordEncoderPort passwordEncoder,
             SecureHasherPort secureHasher
 
     ) {
         this.recoverPasswordRepository = recoverPasswordRepository;
-        this.secureRandomGenerator = secureRandomGenerator;
         this.passwordEncoder = passwordEncoder;
         this.secureHasher =secureHasher;
     }
@@ -51,7 +48,7 @@ public class ValidateRecoverPasswordService implements ValidateRecoverPasswordUs
 
         RecoverPassword saved = recoverPasswordRepository.save(recoverPassword);
 
-        return new RecoverPasswordResult(command.recoverToken(), saved.getExpiresAt(), saved.getExpiresAt());
+        return new RecoverPasswordResult(command.recoverToken(), saved.getResendAvailableAt(), saved.getExpiresAt());
     }
 
     private void validateRecoverPassword(RecoverPassword recoverPassword) {

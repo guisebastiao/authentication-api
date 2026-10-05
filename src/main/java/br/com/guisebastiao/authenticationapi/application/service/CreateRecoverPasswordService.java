@@ -53,7 +53,7 @@ public class CreateRecoverPasswordService implements CreateRecoverPasswordUseCas
         Account account = accountRepository.findByEmail(command.email())
                 .orElseThrow(AccountNotFoundException::new);
 
-        RecoverPassword recoverPassword = createRecoverPassword(account, otpCode, recoverToken);
+        RecoverPassword recoverPassword = createRecoverPassword(account, recoverToken, otpCode);
 
         sendRecoverPasswordEmailUseCase.execute(command.email(), otpCode, recoverPassword.getExpiresAt());
 

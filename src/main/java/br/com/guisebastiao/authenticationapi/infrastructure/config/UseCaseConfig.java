@@ -322,13 +322,11 @@ public class UseCaseConfig {
     @Bean
     public ValidateRecoverPasswordService validateRecoverPasswordService(
             RecoverPasswordRepositoryPort recoverPasswordRepository,
-            SecureRandomGeneratorPort secureRandomGenerator,
             PasswordEncoderPort passwordEncoder,
             SecureHasherPort secureHasher
     ) {
         return new ValidateRecoverPasswordService(
                 recoverPasswordRepository,
-                secureRandomGenerator,
                 passwordEncoder,
                 secureHasher
         );
