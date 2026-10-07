@@ -39,7 +39,7 @@ public class GoogleSignInService implements GoogleSignInUseCase {
 
     @Override
     public AuthResult execute(GoogleSignInCommand command, String userAgent, String ipAddress) {
-        GoogleAuthorizationResult googleResult = googleAuthorization.authorize(command.credential());
+        GoogleAuthorizationResult googleResult = googleAuthorization.authorize(command.code());
 
         Account account = accountRepository.findByEmail(googleResult.email())
                 .orElseThrow(AccountNotFoundException::new);

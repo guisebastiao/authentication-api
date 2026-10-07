@@ -72,7 +72,7 @@ class GoogleSignInServiceTest {
         CreateSessionResult sessionResult = new CreateSessionResult("session-token", session);
         CreateRefreshResult refreshResult = new CreateRefreshResult("refresh-token", new Refresh());
 
-        given(googleAuthorization.authorize(command.credential()))
+        given(googleAuthorization.authorize(command.code()))
                 .willReturn(googleResult);
 
         given(accountRepository.findByEmail(googleResult.email()))
@@ -93,7 +93,7 @@ class GoogleSignInServiceTest {
         assertEquals(refreshResult.refreshToken(), result.refreshToken());
         assertEquals(sessionResult.sessionToken(), result.sessionToken());
 
-        then(googleAuthorization).should().authorize(command.credential());
+        then(googleAuthorization).should().authorize(command.code());
         then(accountRepository).should().findByEmail(googleResult.email());
         then(createSessionUseCase).should().execute(account, userAgent, ipAddress);
         then(createRefreshUseCase).should().execute(session);
@@ -107,7 +107,7 @@ class GoogleSignInServiceTest {
         GoogleSignInCommand command = new GoogleSignInCommand("google-credential");
         GoogleAuthorizationResult googleResult = new GoogleAuthorizationResult("unknown@example.com");
 
-        given(googleAuthorization.authorize(command.credential()))
+        given(googleAuthorization.authorize(command.code()))
                 .willReturn(googleResult);
 
         given(accountRepository.findByEmail(googleResult.email()))
@@ -118,7 +118,7 @@ class GoogleSignInServiceTest {
                 () -> service.execute(command, "Mozilla/5.0", "192.168.0.10")
         );
 
-        then(googleAuthorization).should().authorize(command.credential());
+        then(googleAuthorization).should().authorize(command.code());
         then(accountRepository).should().findByEmail(googleResult.email());
         then(createAccountActivationUseCase).shouldHaveNoInteractions();
         then(createSessionUseCase).shouldHaveNoInteractions();
@@ -140,7 +140,7 @@ class GoogleSignInServiceTest {
                 Instant.parse("2026-10-04T12:01:00Z")
         );
 
-        given(googleAuthorization.authorize(command.credential()))
+        given(googleAuthorization.authorize(command.code()))
                 .willReturn(googleResult);
 
         given(accountRepository.findByEmail(googleResult.email()))
@@ -170,7 +170,7 @@ class GoogleSignInServiceTest {
         account.setEmail(googleResult.email());
         account.setStatus(AccountStatus.DISABLED);
 
-        given(googleAuthorization.authorize(command.credential()))
+        given(googleAuthorization.authorize(command.code()))
                 .willReturn(googleResult);
 
         given(accountRepository.findByEmail(googleResult.email()))

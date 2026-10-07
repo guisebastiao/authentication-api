@@ -8,6 +8,6 @@ import static br.com.guisebastiao.authenticationapi.adapter.in.validation.Valida
 public record GoogleSignInRequest(
         @NotBlank(message = REQUIRED)
         @Length(max = 2048, message = INVALID_MAX_SIZE)
-        String credential
+        String code
 ) {
 }
