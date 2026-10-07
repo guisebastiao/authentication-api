@@ -4,8 +4,13 @@ import br.com.guisebastiao.authenticationapi.application.port.out.GoogleAuthoriz
 import br.com.guisebastiao.authenticationapi.application.result.GoogleAuthorizationResult;
 import br.com.guisebastiao.authenticationapi.domain.exception.GoogleAuthenticationException;
 import br.com.guisebastiao.authenticationapi.domain.exception.InvalidGoogleTokenException;
+import br.com.guisebastiao.authenticationapi.infrastructure.properties.GoogleProperties;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,19 +21,38 @@ import java.security.GeneralSecurityException;
 @RequiredArgsConstructor
 public class GoogleAuthenticationAdapter implements GoogleAuthorizationPort {
     private final GoogleIdTokenVerifier verifier;
+    private final GoogleProperties properties;
+    private final HttpTransport httpTransport;
+    private final JsonFactory jsonFactory;
 
     @Override
-    public GoogleAuthorizationResult authorize(String credential) {
+    public GoogleAuthorizationResult authorize(String code) {
         try {
-            GoogleIdToken token = verifier.verify(credential);
+            GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
+                    httpTransport,
+                    jsonFactory,
+                    properties.clientId(),
+                    properties.clientSecret(),
+                    code,
+                    "postmessage"
+            ).execute();
 
-            if (token == null) {
+            String idTokenValue = tokenResponse.getIdToken();
+
+            if (idTokenValue == null) {
                 throw new InvalidGoogleTokenException();
             }
 
-            GoogleIdToken.Payload payload = token.getPayload();
+            GoogleIdToken idToken = verifier.verify(idTokenValue);
+
+            if (idToken == null) {
+                throw new InvalidGoogleTokenException();
+            }
+
+            GoogleIdToken.Payload payload = idToken.getPayload();
 
             return new GoogleAuthorizationResult(payload.getEmail());
+
         } catch (GeneralSecurityException | IOException exception) {
             throw new GoogleAuthenticationException(exception);
         }
